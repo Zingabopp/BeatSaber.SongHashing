@@ -24,11 +24,11 @@ jobs:
     - name: Pack
       run: dotnet pack ./BeatSaber.SongHashing/BeatSaber.SongHashing.csproj -c Release -o ./artifacts --no-restore --include-symbols
     - name: VerifyName
-      run: echo ${{ steps.Build.outputs.filename }}
+      run: echo ${{ steps.Pack.outputs.filename }}
     - name: Upload Artifact
       uses: actions/upload-artifact@v1
       with:
-        name: NuGet-${{ steps.Build.outputs.filename }}
+        name: NuGet-${{ steps.Pack.outputs.filename }}
         path: ./artifacts
     - name: Test
       run: dotnet test --configuration Release --no-build --verbosity normal --logger GitHubActions
