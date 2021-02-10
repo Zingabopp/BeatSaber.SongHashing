@@ -55,4 +55,9 @@
     <Message Text="::set-output name=filename::$(AssemblyName)-$(PackageVersion)" Importance="high" />
     <Message Text="::set-output name=assemblyname::$(AssemblyName)" Importance="high" />
   </Target>
+
+  <Target Name="GithubActionsInfo" AfterTargets="Pack">
+    <Message Text="::set-output name=filename::$(AssemblyName)-$(PackageVersion)" Importance="high" />
+    <Message Text="::set-output name=assemblyname::$(AssemblyName)" Importance="high" />
+  </Target>
 </Project>
