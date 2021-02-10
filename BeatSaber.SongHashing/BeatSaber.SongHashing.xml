@@ -1,0 +1,375 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BeatSaber.SongHashing</name>
+    </assembly>
+    <members>
+        <member name="T:BeatSaber.SongHashing.ConcatenatedStream">
+            <summary>
+            A collection of Streams treated as one.
+            </summary>
+        </member>
+        <member name="M:BeatSaber.SongHashing.ConcatenatedStream.#ctor">
+            <summary>
+            Creates an empty <see cref="T:BeatSaber.SongHashing.ConcatenatedStream"/>.
+            </summary>
+        </member>
+        <member name="M:BeatSaber.SongHashing.ConcatenatedStream.#ctor(System.Int32)">
+            <summary>
+            Creates a new <see cref="T:BeatSaber.SongHashing.ConcatenatedStream"/> from a collection of Streams.
+            </summary>
+            <param name="initialSize"></param>
+        </member>
+        <member name="P:BeatSaber.SongHashing.ConcatenatedStream.CanRead">
+            <inheritdoc/>
+        </member>
+        <member name="P:BeatSaber.SongHashing.ConcatenatedStream.CanSeek">
+            <inheritdoc/>
+        </member>
+        <member name="P:BeatSaber.SongHashing.ConcatenatedStream.CanWrite">
+            <inheritdoc/>
+        </member>
+        <member name="P:BeatSaber.SongHashing.ConcatenatedStream.Length">
+            <inheritdoc/>
+        </member>
+        <member name="P:BeatSaber.SongHashing.ConcatenatedStream.Position">
+            <inheritdoc/>
+        </member>
+        <member name="M:BeatSaber.SongHashing.ConcatenatedStream.Flush">
+            <inheritdoc/>
+        </member>
+        <member name="M:BeatSaber.SongHashing.ConcatenatedStream.Read(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:BeatSaber.SongHashing.ConcatenatedStream.Seek(System.Int64,System.IO.SeekOrigin)">
+            <inheritdoc/>
+        </member>
+        <member name="M:BeatSaber.SongHashing.ConcatenatedStream.SetLength(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:BeatSaber.SongHashing.ConcatenatedStream.Write(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="T:BeatSaber.SongHashing.Hasher">
+            <summary>
+            A collection of hashing utilities.
+            </summary>
+        </member>
+        <member name="M:BeatSaber.SongHashing.Hasher.HashDirectory(System.String)">
+            <summary>
+            Generates a hash for the song and assigns it to the SongHash field. Returns null if info.dat doesn't exist.
+            Uses Kylemc1413's implementation from SongCore.
+            TODO: Handle/document exceptions (such as if the files no longer exist when this is called).
+            https://github.com/Kylemc1413/SongCore
+            </summary>
+            <returns>Hash of the song files. Null if the info.dat file doesn't exist</returns>
+            <exception cref="T:System.IO.DirectoryNotFoundException"></exception>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:Newtonsoft.Json.JsonException"></exception>
+        </member>
+        <member name="M:BeatSaber.SongHashing.Hasher.QuickDirectoryHash(System.String)">
+            <summary>
+            Generates a quick hash of a directory's contents. Does NOT match SongCore.
+            Uses most of Kylemc1413's implementation from SongCore.
+            </summary>
+            <param name="path"></param>
+            <exception cref="T:System.ArgumentNullException">Thrown when path is null or empty.</exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">Thrown when path's directory doesn't exist.</exception>
+            <returns></returns>
+        </member>
+        <member name="M:BeatSaber.SongHashing.IBeatmapHasher.HashDirectory(System.String)">
+            <summary>
+            Generates a hash for the song and assigns it to the SongHash field. Returns null if info.dat doesn't exist.
+            TODO: Handle/document exceptions (such as if the files no longer exist when this is called).
+            </summary>
+            <returns>Hash of the song files. Null if the info.dat file doesn't exist</returns>
+            <exception cref="T:System.IO.DirectoryNotFoundException"></exception>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:Newtonsoft.Json.JsonException"></exception>
+        </member>
+        <member name="M:BeatSaber.SongHashing.IBeatmapHasher.QuickDirectoryHash(System.String)">
+            <summary>
+            Generates a quick hash to determine if the song directory or it's files has changed.
+            Does NOT equate to a Beat Saver hash.
+            </summary>
+            <param name="songDirectory"></param>
+            <returns></returns>
+        </member>
+        <member name="T:BeatSaber.SongHashing.Legacy.LegacyHasher">
+            <summary>
+            A collection of hashing utilities.
+            </summary>
+        </member>
+        <member name="F:BeatSaber.SongHashing.Legacy.LegacyHasher.Default">
+            <summary>
+            Default instance of <see cref="T:BeatSaber.SongHashing.Legacy.LegacyHasher"/>.
+            </summary>
+        </member>
+        <member name="M:BeatSaber.SongHashing.Legacy.LegacyHasher.HashDirectory(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:BeatSaber.SongHashing.Legacy.LegacyHasher.QuickDirectoryHash(System.String)">
+            <summary>
+            Generates a quick hash of a directory's contents. Does NOT match SongCore.
+            Uses most of Kylemc1413's implementation from SongCore.
+            </summary>
+            <param name="path"></param>
+            <exception cref="T:System.ArgumentNullException">Thrown when path is null or empty.</exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">Thrown when path's directory doesn't exist.</exception>
+            <returns></returns>
+        </member>
+        <member name="T:BeatSaber.SongHashing.Utilities">
+            <summary>
+            Utilities used for song hashing.
+            </summary>
+        </member>
+        <member name="M:BeatSaber.SongHashing.Utilities.GetDifficultyFileNames(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Enumerates over the list of difficulty files from the <see cref="T:Newtonsoft.Json.Linq.JObject"/> of an 'info.dat' file.
+            </summary>
+            <param name="infoFile"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BeatSaber.SongHashing.Utilities.CreateSha1FromBytes(System.Byte[])">
+            <summary>
+            Generates a SHA1 hash from a byte array.
+            </summary>
+            <param name="input">Byte array to hash.</param>
+            <returns>Sha1 hash of the byte array.</returns>
+        </member>
+        <member name="M:BeatSaber.SongHashing.Utilities.CreateSha1FromStream(System.IO.Stream)">
+            <summary>
+            Generates a SHA1 hash from a Stream.
+            </summary>
+            <param name="input">Stream to hash.</param>
+            <returns>Sha1 hash of the Stream.</returns>
+        </member>
+        <member name="M:BeatSaber.SongHashing.Utilities.SumCharacters(System.String)">
+            <summary>
+            Sums the char value of each character in the given string (unchecked).
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="T:HexMate.Convert">
+            <summary>
+            A collection of functions for converting data.
+            </summary>
+        </member>
+        <member name="M:HexMate.Convert.FromHexCharArray(System.Char[],System.Int32,System.Int32)">
+            <summary>
+            Converts a subset of a Unicode character array, which encodes binary data as hex characters,
+            to an equivalent 8-bit unsigned integer array.
+            Parameters specify the subset in the input array and the number of elements to convert.
+            </summary>
+            <param name="inArray">A Unicode character array.</param>
+            <param name="offset">A position within <paramref name="inArray"/>.</param>
+            <param name="length">The number of elements in <paramref name="inArray"/> to convert.</param>
+            <returns>An array of 8-bit unsigned integers equivalent to <paramref name="length"/> elements at position <paramref name="offset"/> in <paramref name="inArray"/>.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="inArray"/> is <code>null</code>.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="offset"/> or <paramref name="length"/> is less than 0.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="offset"/> plus <paramref name="length"/> indicates a position not within inArray.</exception>
+            <exception cref="T:System.FormatException">The length of <paramref name="inArray"/>, ignoring white-space characters, is not zero or a multiple of 2.</exception>
+            <exception cref="T:System.FormatException">The format of <paramref name="inArray"/> is invalid. <paramref name="inArray"/> contains a non-hex character.</exception>
+        </member>
+        <member name="M:HexMate.Convert.FromHexString(System.String)">
+            <summary>
+            Converts the specified string, which encodes binary data as hex characters, to an equivalent 8-bit unsigned integer array.
+            </summary>
+            <param name="s">The string to convert.</param>
+            <returns>An array of 8-bit unsigned integers that is equivalent to <paramref name="s"/>.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="s"/> is <code>null</code>.</exception>
+            <exception cref="T:System.FormatException">The length of <paramref name="s"/>, ignoring white-space characters, is not zero or a multiple of 2.</exception>
+            <exception cref="T:System.FormatException">The format of <paramref name="s"/> is invalid. <paramref name="s"/> contains a non-hex character.</exception>
+        </member>
+        <member name="M:HexMate.Convert.ToHexCharArray(System.Byte[],System.Int32,System.Int32,System.Char[],System.Int32,HexMate.HexFormattingOptions)">
+            <summary>
+            Converts a subset of an 8-bit unsigned integer array to an equivalent subset of a Unicode character array encoded with hex characters.
+            Parameters specify the subsets as offsets in the input and output arrays, the number of elements in the input array to convert,
+            whether line breaks are inserted in the output array, and whether to insert upper- or lowercase hex characters.
+            </summary>
+            <param name="inArray">An input array of 8-bit unsigned integers.</param>
+            <param name="offsetIn">A position within <paramref name="inArray"/>.</param>
+            <param name="length">The number of elements of <paramref name="inArray"/> to convert.</param>
+            <param name="outArray">An output array of Unicode characters.</param>
+            <param name="offsetOut">A position within <paramref name="outArray"/>.</param>
+            <param name="options"><see cref="F:HexMate.HexFormattingOptions.Lowercase"/> to produce lowercase output. <see cref="F:HexMate.HexFormattingOptions.InsertLineBreaks"/> to insert a line break every 72 characters. <see cref="F:HexMate.HexFormattingOptions.None"/> to do neither.</param>
+            <returns>A 32-bit signed integer containing the number of bytes in <paramref name="outArray"/>.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="inArray"/> or <paramref name="outArray"/> is null.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="offsetIn"/>, <paramref name="offsetOut"/>, or <paramref name="length"/> is negative.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="offsetIn"/> plus <paramref name="length"/> is greater than the length of <paramref name="inArray"/>.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="offsetOut"/> plus the number of elements to return is greater than the length of <paramref name="outArray"/>.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="options"/> is not a valid <see cref="T:HexMate.HexFormattingOptions"/> value.</exception>
+        </member>
+        <member name="M:HexMate.Convert.ToHexString(System.Byte[],HexMate.HexFormattingOptions)">
+            <summary>
+            Converts an array of 8-bit unsigned integers to its equivalent string representation that is encoded with hex characters.
+            A parameter specifies whether to insert line breaks in the return value and whether to insert upper- or lowercase hex characters.
+            </summary>
+            <param name="inArray">An array of 8-bit unsigned integers.</param>
+            <param name="options"><see cref="F:HexMate.HexFormattingOptions.Lowercase"/> to produce lowercase output. <see cref="F:HexMate.HexFormattingOptions.InsertLineBreaks"/> to insert a line break every 72 characters. <see cref="F:HexMate.HexFormattingOptions.None"/> to do neither.</param>
+            <returns>The string representation in hex of the elements in <paramref name="inArray"/>.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="inArray"/> is <code>null</code>.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="options"/> is not a valid <see cref="T:HexMate.HexFormattingOptions"/> value.</exception>
+        </member>
+        <member name="M:HexMate.Convert.ToHexString(System.Byte[],System.Int32,System.Int32,HexMate.HexFormattingOptions)">
+            <summary>
+            Converts a subset of an array of 8-bit unsigned integers to its equivalent string representation that is encoded with hex characters.
+            Parameters specify the subset as an offset in the input array, the number of elements in the array to convert,
+            whether to insert line breaks in the return value, and whether to insert upper- or lowercase hex characters.
+            </summary>
+            <param name="inArray">An array of 8-bit unsigned integers.</param>
+            <param name="offset">An offset in <paramref name="inArray"/>.</param>
+            <param name="length">The number of elements of <paramref name="inArray"/> to convert.</param>
+            <param name="options"><see cref="F:HexMate.HexFormattingOptions.Lowercase"/> to produce lowercase output. <see cref="F:HexMate.HexFormattingOptions.InsertLineBreaks"/> to insert a line break every 72 characters. <see cref="F:HexMate.HexFormattingOptions.None"/> to do neither.</param>
+            <returns>The string representation in hex of <paramref name="length"/> elements of <paramref name="inArray"/>, starting at position <paramref name="offset"/>.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="inArray"/> is <code>null</code>.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="offset"/> or <paramref name="length"/> is negative.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="offset"/> plus <paramref name="length"/> is greater than the length of <paramref name="inArray"/>.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="options"/> is not a valid <see cref="T:HexMate.HexFormattingOptions"/> value.</exception>
+        </member>
+        <member name="M:HexMate.Convert.FromHexString(System.ReadOnlySpan{System.Char})">
+            <summary>
+            Converts the span, which encodes binary data as hex characters, to an equivalent 8-bit unsigned integer array.
+            </summary>
+            <param name="chars">The span to convert.</param>
+            <returns>An array of 8-bit unsigned integers that is equivalent to <paramref name="chars"/>.</returns>
+            <exception cref="T:System.FormatException">The length of <paramref name="chars"/>, ignoring white-space characters, is not zero or a multiple of 2.</exception>
+            <exception cref="T:System.FormatException">The format of <paramref name="chars"/> is invalid. <paramref name="chars"/> contains a non-hex character.</exception>
+        </member>
+        <member name="M:HexMate.Convert.ToHexString(System.ReadOnlySpan{System.Byte},HexMate.HexFormattingOptions)">
+            <summary>
+            Converts a span of 8-bit unsigned integers to its equivalent string representation that is encoded with hex characters.
+            A parameter specifies whether to insert line breaks in the return value and whether to insert upper- or lowercase hex characters.
+            </summary>
+            <param name="bytes">A span of 8-bit unsigned integers.</param>
+            <param name="options"><see cref="F:HexMate.HexFormattingOptions.Lowercase"/> to produce lowercase output. <see cref="F:HexMate.HexFormattingOptions.InsertLineBreaks"/> to insert a line break every 72 characters. <see cref="F:HexMate.HexFormattingOptions.None"/> to do neither.</param>
+            <returns>The string representation in hex of the elements in <paramref name="bytes"/>.</returns>
+            <exception cref="T:System.ArgumentException"><paramref name="options"/> is not a valid <see cref="T:HexMate.HexFormattingOptions"/> value.</exception>
+        </member>
+        <member name="M:HexMate.Convert.TryFromHexChars(System.ReadOnlySpan{System.Char},System.Span{System.Byte},System.Int32@)">
+            <summary>
+            Converts the span, which encodes binary data as hex characters, into a span of equivalent 8-bit unsigned integers.
+            </summary>
+            <param name="chars">The span to convert.</param>
+            <param name="bytes">The output span.</param>
+            <param name="bytesWritten">The number of bytes written into <paramref name="bytes"/>.</param>
+            <returns>Whether the conversion operation completed successfully.</returns>
+        </member>
+        <member name="M:HexMate.Convert.TryFromHexString(System.String,System.Span{System.Byte},System.Int32@)">
+            <summary>
+            Converts the specified string, which encodes binary data as hex characters, into a span of equivalent 8-bit unsigned integers.
+            </summary>
+            <param name="s">The string to convert.</param>
+            <param name="bytes">The output span.</param>
+            <param name="bytesWritten">The number of bytes written into <paramref name="bytes"/>.</param>
+            <returns>Whether the conversion operation completed successfully.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="s"/> is <code>null</code>.</exception>
+        </member>
+        <member name="M:HexMate.Convert.TryToHexChars(System.ReadOnlySpan{System.Byte},System.Span{System.Char},System.Int32@,HexMate.HexFormattingOptions)">
+            <summary>
+            Converts a span of 8-bit unsigned integers to an equivalent span of a Unicode characters encoded with hex characters.
+            A parameter specifies whether to insert line breaks in the return value and whether to insert upper- or lowercase hex characters.
+            </summary>
+            <param name="bytes">The input span.</param>
+            <param name="chars">The output span</param>
+            <param name="charsWritten">The number of bytes written into <paramref name="chars"/>.</param>
+            <param name="options"><see cref="F:HexMate.HexFormattingOptions.Lowercase"/> to produce lowercase output. <see cref="F:HexMate.HexFormattingOptions.InsertLineBreaks"/> to insert a line break every 72 characters. <see cref="F:HexMate.HexFormattingOptions.None"/> to do neither.</param>
+            <returns>Whether the conversion operation completed successfully.</returns>
+            <exception cref="T:System.ArgumentException"><paramref name="options"/> is not a valid <see cref="T:HexMate.HexFormattingOptions"/> value.</exception>
+        </member>
+        <member name="T:HexMate.Hex">
+            <summary>
+            A collection of functions for converting data.
+            </summary>
+        </member>
+        <member name="M:HexMate.Hex.DecodeFromUtf8(System.ReadOnlySpan{System.Byte},System.Span{System.Byte},System.Int32@,System.Int32@,System.Boolean)">
+            <summary>
+            Decode the span of UTF-8 encoded text represented as hexadecimal characters into binary data.
+            If the input is not a multiple of 2, it will decode as much as it can, to the closest multiple of 2.
+            </summary>
+            <param name="utf8">The input span which contains UTF-8 encoded text that needs to be decoded.</param>
+            <param name="bytes">The output span which contains the result of the operation, i.e. the decoded binary data.</param>
+            <param name="bytesConsumed">The number of input bytes consumed during the operation. This can be used to slice the input for subsequent calls, if necessary.</param>
+            <param name="bytesWritten">The number of bytes written into the output span. This can be used to slice the output for subsequent calls, if necessary.</param>
+            <param name="isFinalBlock">True (default) when the input span contains the entire data to decode.
+            Set to false only if it is known that the input span contains partial data with more data to follow.</param>
+            <returns>It returns the OperationStatus enum values:
+            - Done - on successful processing of the entire input span
+            - DestinationTooSmall - if there is not enough space in the output span to fit the decoded input
+            - NeedMoreData - only if isFinalBlock is false and the input is not a multiple of 2, otherwise the partial input would be considered as InvalidData
+            - InvalidData - if the input contains bytes outside of the expected range, or if the input is incomplete (i.e. not a multiple of 2) and isFinalBlock is true.
+            </returns>
+        </member>
+        <member name="M:HexMate.Hex.DecodeFromUtf8InPlace(System.Span{System.Byte},System.Int32@)">
+            <summary>
+            Decode the span of UTF-8 encoded text represented as hexadecimal characters into binary data.
+            The decoded binary output is smaller than the text data contained in the input (the operation deflates the data).
+            If the input is not a multiple of 2, it will not decode any.
+            </summary>
+            <param name="buffer">The input span which contains UTF-8 encoded text that needs to be decoded.</param>
+            <param name="bytesWritten">The number of bytes written into the buffer.</param>
+            <returns>It returns the OperationStatus enum values:
+            - Done - on successful processing of the entire input span
+            - InvalidData - if the input contains bytes outside of the expected range, or if the input is incomplete (i.e. not a multiple of 2).
+            It does not return DestinationTooSmall since that is not possible for hex decoding.
+            It does not return NeedMoreData since this method tramples the data in the buffer and
+            hence can only be called once with all the data in the buffer.
+            </returns>
+        </member>
+        <member name="M:HexMate.Hex.EncodeToUtf8(System.ReadOnlySpan{System.Byte},System.Span{System.Byte},System.Int32@,System.Int32@,System.Boolean)">
+            <summary>
+            Encode the span of binary data into UTF-8 encoded text represented as hexadecimal characters.
+            </summary>
+            <param name="bytes">The input span which contains binary data that needs to be encoded.</param>
+            <param name="utf8">The output span which contains the result of the operation, i.e. the UTF-8 encoded as hexadecimal characters.</param>
+            <param name="bytesConsumed">The number of input bytes consumed during the operation. This can be used to slice the input for subsequent calls, if necessary.</param>
+            <param name="bytesWritten">The number of bytes written into the output span. This can be used to slice the output for subsequent calls, if necessary.</param>
+            <param name="isFinalBlock">True (default) when the input span contains the entire data to encode.
+            Set to false only if it is known that the input span contains partial data with more data to follow.</param>
+            <returns>It returns the OperationStatus enum values:
+            - Done - on successful processing of the entire input span
+            - DestinationTooSmall - if there is not enough space in the output span to fit the encoded input
+            - NeedMoreData - only if isFinalBlock is false
+            It does not return InvalidData since that is not possible for hex encoding.
+            </returns>
+        </member>
+        <member name="M:HexMate.Hex.EncodeToUtf8InPlace(System.Span{System.Byte},System.Int32,System.Int32@)">
+            <summary>
+            Encode the span of binary data (in-place) into UTF-8 encoded text represented as hexadecimal characters.
+            The encoded text output is larger than the binary data contained in the input (the operation inflates the data).
+            </summary>
+            <param name="buffer">The input span which contains binary data that needs to be encoded.
+            It needs to be large enough to fit the result of the operation.</param>
+            <param name="dataLength">The amount of binary data contained within the buffer that needs to be encoded
+            (and needs to be smaller than the buffer length).</param>
+            <param name="bytesWritten">The number of bytes written into the buffer.</param>
+            <returns>It returns the OperationStatus enum values:
+            - Done - on successful processing of the entire buffer
+            - DestinationTooSmall - if there is not enough space in the buffer beyond dataLength to fit the result of encoding the input
+            It does not return NeedMoreData since this method tramples the data in the buffer and hence can only be called once with all the data in the buffer.
+            It does not return InvalidData since that is not possible for hex encoding.
+            </returns>
+        </member>
+        <member name="T:HexMate.HexFormattingOptions">
+            <summary>
+            Specifies whether relevant methods produce uppercase or lowercase letters and whether line breaks are inserted in their output.
+            </summary>
+        </member>
+        <member name="F:HexMate.HexFormattingOptions.None">
+            <summary>
+            Produces only uppercase characters and does not insert line breaks after every 72 characters in the string representation.
+            </summary>
+        </member>
+        <member name="F:HexMate.HexFormattingOptions.InsertLineBreaks">
+            <summary>
+            Inserts line breaks after every 72 characters in the string representation.
+            </summary>
+        </member>
+        <member name="F:HexMate.HexFormattingOptions.Lowercase">
+            <summary>
+            Produces only lowercase characters in the string representation.
+            </summary>
+        </member>
+    </members>
+</doc>
