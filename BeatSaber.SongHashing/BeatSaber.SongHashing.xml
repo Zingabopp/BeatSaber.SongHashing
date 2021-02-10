@@ -57,15 +57,11 @@
         </member>
         <member name="M:BeatSaber.SongHashing.Hasher.HashDirectory(System.String)">
             <summary>
-            Generates a hash for the song and assigns it to the SongHash field. Returns null if info.dat doesn't exist.
-            Uses Kylemc1413's implementation from SongCore.
-            TODO: Handle/document exceptions (such as if the files no longer exist when this is called).
-            https://github.com/Kylemc1413/SongCore
+            Generates a hash for the song and assigns it to the SongHash field. Hash is null if it can't be generated.
             </summary>
-            <returns>Hash of the song files. Null if the info.dat file doesn't exist</returns>
+            <returns>Hash of the song files. Hash is null if it can't be generated.</returns>
             <exception cref="T:System.IO.DirectoryNotFoundException"></exception>
             <exception cref="T:System.ArgumentNullException"></exception>
-            <exception cref="T:Newtonsoft.Json.JsonException"></exception>
         </member>
         <member name="M:BeatSaber.SongHashing.Hasher.QuickDirectoryHash(System.String)">
             <summary>
@@ -76,6 +72,11 @@
             <exception cref="T:System.ArgumentNullException">Thrown when path is null or empty.</exception>
             <exception cref="T:System.IO.DirectoryNotFoundException">Thrown when path's directory doesn't exist.</exception>
             <returns></returns>
+        </member>
+        <member name="T:BeatSaber.SongHashing.IBeatmapHasher">
+            <summary>
+            Interface for a beatmap hasher.
+            </summary>
         </member>
         <member name="M:BeatSaber.SongHashing.IBeatmapHasher.HashDirectory(System.String)">
             <summary>
@@ -94,6 +95,65 @@
             </summary>
             <param name="songDirectory"></param>
             <returns></returns>
+        </member>
+        <member name="T:BeatSaber.SongHashing.HashResult">
+            <summary>
+            Stores the result of a beatmap hashing.
+            </summary>
+        </member>
+        <member name="F:BeatSaber.SongHashing.HashResult.ResultType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:BeatSaber.SongHashing.HashResult.Hash">
+            <summary>
+            Beatmap hash if the hashing was successful, null otherwise.
+            </summary>
+        </member>
+        <member name="F:BeatSaber.SongHashing.HashResult.Exception">
+            <summary>
+            Any <see cref="F:BeatSaber.SongHashing.HashResult.Exception"/> thrown while hashing will be stored here.
+            </summary>
+        </member>
+        <member name="F:BeatSaber.SongHashing.HashResult.Message">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BeatSaber.SongHashing.HashResult.#ctor(System.String)">
+            <summary>
+            Creates a new <see cref="T:BeatSaber.SongHashing.HashResult"/> with <see cref="F:BeatSaber.SongHashing.HashResultType.Success"/>.
+            </summary>
+            <param name="hash"></param>
+        </member>
+        <member name="M:BeatSaber.SongHashing.HashResult.#ctor(System.String,System.String,System.Exception)">
+            <summary>
+            Creates a new <see cref="T:BeatSaber.SongHashing.HashResult"/>.
+            </summary>
+            <param name="hash"></param>
+            <param name="message"></param>
+            <param name="exception"></param>
+        </member>
+        <member name="T:BeatSaber.SongHashing.HashResultType">
+            <summary>
+            Type of hash result.
+            </summary>
+        </member>
+        <member name="F:BeatSaber.SongHashing.HashResultType.Success">
+            <summary>
+            Beatmap was hashed successfully.
+            </summary>
+        </member>
+        <member name="F:BeatSaber.SongHashing.HashResultType.Warn">
+            <summary>
+            Beatmap was hashed with a warning.
+            </summary>
+        </member>
+        <member name="F:BeatSaber.SongHashing.HashResultType.Error">
+            <summary>
+            Beatmap could not be hashed.
+            </summary>
         </member>
         <member name="T:BeatSaber.SongHashing.Legacy.LegacyHasher">
             <summary>

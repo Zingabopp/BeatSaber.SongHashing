@@ -2,6 +2,7 @@ using BeatSaber.SongHashing;
 using BeatSaber.SongHashing.Legacy;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -49,6 +50,28 @@ namespace HashingTests
                     continue;
                 Assert.IsTrue(actualFiles.Contains(expectedFiles[i]), $"Expected file '{expectedFiles[i]}'");
             }
+        }
+
+        [TestMethod]
+        public void SongCore()
+        {
+            string hashDataPath = @"H:\SteamApps\SteamApps\common\Beat Saber\UserData\SongCore\SongHashData.json";
+            Dictionary<string, string> hashMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            JObject token = JObject.Parse(File.ReadAllText(hashDataPath));
+            foreach (var prop in token.Children().Select(t => (JProperty)t))
+            {
+                string hash = ((JObject)prop.Value)?["songHash"]?.Value<string>();
+                if (hash != null)
+                    hashMap[prop.Name] = hash;
+                else
+                    Console.WriteLine($"hash was null in {prop.Name}");
+            }
+            string keyCheck = @"H:\SteamApps\SteamApps\common\Beat Saber\Beat Saber_Data\CustomLevels\6be8 (Galactic Empire - Duel of the Fates - aeronui)";
+            string actual = hashMap.Keys.FirstOrDefault(k => k.Contains("6be8"));
+
+            Assert.IsTrue(hashMap.ContainsKey(keyCheck));
+            Console.WriteLine(hashMap.Count);
+            Console.WriteLine(hashMap.Keys.First());
         }
     }
 }

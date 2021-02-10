@@ -6,6 +6,9 @@ using System.Text;
 
 namespace BeatSaber.SongHashing
 {
+    /// <summary>
+    /// Interface for a beatmap hasher.
+    /// </summary>
     public interface IBeatmapHasher
     {
         /// <summary>
@@ -16,7 +19,7 @@ namespace BeatSaber.SongHashing
         /// <exception cref="DirectoryNotFoundException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="JsonException"></exception>
-        string? HashDirectory(string songDirectory);
+        HashResult HashDirectory(string songDirectory);
 
         /// <summary>
         /// Generates a quick hash to determine if the song directory or it's files has changed.
@@ -25,5 +28,84 @@ namespace BeatSaber.SongHashing
         /// <param name="songDirectory"></param>
         /// <returns></returns>
         long QuickDirectoryHash(string songDirectory);
+    }
+
+    /// <summary>
+    /// Stores the result of a beatmap hashing.
+    /// </summary>
+    public struct HashResult
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public HashResultType ResultType;
+        /// <summary>
+        /// Beatmap hash if the hashing was successful, null otherwise.
+        /// </summary>
+        public string? Hash;
+
+        /// <summary>
+        /// Any <see cref="Exception"/> thrown while hashing will be stored here.
+        /// </summary>
+        public Exception? Exception;
+        /// <summary>
+        /// 
+        /// </summary>
+        public string? Message;
+
+        /// <summary>
+        /// Creates a new <see cref="HashResult"/> with <see cref="HashResultType.Success"/>.
+        /// </summary>
+        /// <param name="hash"></param>
+        public HashResult(string hash)
+        {
+            if(string.IsNullOrEmpty(hash))
+                throw new ArgumentNullException(nameof(hash), "This constructor should only be used with a successful hash.");
+            Hash = hash;
+            ResultType = HashResultType.Success;
+            Exception = null;
+            Message = null;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="HashResult"/>.
+        /// </summary>
+        /// <param name="hash"></param>
+        /// <param name="message"></param>
+        /// <param name="exception"></param>
+        public HashResult(string? hash, string? message, Exception? exception)
+        {
+            if (hash == null || hash.Length == 0)
+                Hash = null;
+            else
+                Hash = hash;
+            if (hash == null)
+                ResultType = HashResultType.Error;
+            else if ((message != null && message.Length > 0) || exception != null)
+                ResultType = HashResultType.Warn;
+            else
+                ResultType = HashResultType.Success;
+            Exception = exception;
+            Message = message;
+        }
+    }
+
+    /// <summary>
+    /// Type of hash result.
+    /// </summary>
+    public enum HashResultType
+    {
+        /// <summary>
+        /// Beatmap was hashed successfully.
+        /// </summary>
+        Success,
+        /// <summary>
+        /// Beatmap was hashed with a warning.
+        /// </summary>
+        Warn,
+        /// <summary>
+        /// Beatmap could not be hashed.
+        /// </summary>
+        Error
     }
 }

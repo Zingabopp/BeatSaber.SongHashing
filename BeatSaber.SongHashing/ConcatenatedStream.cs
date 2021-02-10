@@ -23,6 +23,8 @@ namespace BeatSaber.SongHashing
             _streams = new Queue<Stream>();
         }
 
+        public int StreamCount => _streams.Count;
+
         /// <summary>
         /// Creates a new <see cref="ConcatenatedStream"/> from a collection of Streams.
         /// </summary>

@@ -13,47 +13,63 @@ namespace BeatSaber.SongHashing
     public class Hasher : IBeatmapHasher
     {
         /// <summary>
-        /// Generates a hash for the song and assigns it to the SongHash field. Returns null if info.dat doesn't exist.
-        /// Uses Kylemc1413's implementation from SongCore.
-        /// TODO: Handle/document exceptions (such as if the files no longer exist when this is called).
-        /// https://github.com/Kylemc1413/SongCore
+        /// Generates a hash for the song and assigns it to the SongHash field. Hash is null if it can't be generated.
         /// </summary>
-        /// <returns>Hash of the song files. Null if the info.dat file doesn't exist</returns>
+        /// <returns>Hash of the song files. Hash is null if it can't be generated.</returns>
         /// <exception cref="DirectoryNotFoundException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="JsonException"></exception>
-        public string? HashDirectory(string songDirectory)
+        public HashResult HashDirectory(string songDirectory)
         {
             if (string.IsNullOrEmpty(songDirectory))
                 throw new ArgumentNullException(nameof(songDirectory));
+            bool missingDiffs = false;
+            string? message = null;
             DirectoryInfo directory = new DirectoryInfo(songDirectory);
             if (!directory.Exists)
                 throw new DirectoryNotFoundException($"Directory doesn't exist: '{songDirectory}'");
-            FileInfo[] files = directory.GetFiles();
-            // Could theoretically get the wrong hash if there are multiple 'info.dat' files with different cases on linux.
-            string? infoFileName = files.FirstOrDefault(f => f.Name.Equals("info.dat", StringComparison.OrdinalIgnoreCase))?.FullName;
-            if (infoFileName == null)
+            try
             {
-                return null;
-            }
-            string infoFile = Path.Combine(songDirectory, infoFileName);
-            if (!File.Exists(infoFile))
-                return null;
-            
-            JObject token = JObject.Parse(File.ReadAllText(infoFile));
-            string[] beatmapFiles = Utilities.GetDifficultyFileNames(token).ToArray();
-            using ConcatenatedStream streams = new ConcatenatedStream(beatmapFiles.Length + 1);
-            streams.Append(File.OpenRead(infoFile));
-            for(int i = 0; i < beatmapFiles.Length; i++)
-            {
-                string filePath = Path.Combine(songDirectory, beatmapFiles[i]);
-                if (!File.Exists(filePath))
-                    continue;
-                streams.Append(File.OpenRead(filePath));
-            }
+                //FileInfo[] files = directory.GetFiles();
+                // Could theoretically get the wrong hash if there are multiple 'info.dat' files with different cases on linux.
+                string? infoFileName = directory.EnumerateFiles().FirstOrDefault(f => f.Name.Equals("info.dat", StringComparison.OrdinalIgnoreCase))?.FullName;
+                if (infoFileName == null)
+                {
+                    return new HashResult(null, $"Could not find 'info.dat' file in '{songDirectory}'", null);
+                }
+                string infoFile = Path.Combine(songDirectory, infoFileName);
+                if (!File.Exists(infoFile))
+                    return new HashResult(null, $"Could not find 'info.dat' file in '{songDirectory}'", null);
 
-            string hash = Utilities.CreateSha1FromStream(streams);
-            return hash;
+                JObject token = JObject.Parse(File.ReadAllText(infoFile));
+                string[] beatmapFiles = Utilities.GetDifficultyFileNames(token).ToArray();
+                using ConcatenatedStream streams = new ConcatenatedStream(beatmapFiles.Length + 1);
+                streams.Append(File.OpenRead(infoFile));
+                for (int i = 0; i < beatmapFiles.Length; i++)
+                {
+                    string filePath = Path.Combine(songDirectory, beatmapFiles[i]);
+                    if (!File.Exists(filePath))
+                    {
+                        if (missingDiffs == false)
+                        {
+                            message = $"Could not find difficulty file '{filePath}'";
+                        }
+                        else
+                            message = $"Missing multiple difficulty files in '{songDirectory}'";
+                        missingDiffs = true;
+                        continue;
+                    }
+                    streams.Append(File.OpenRead(filePath));
+                }
+
+                string? hash = null;
+                if (streams.StreamCount > 0)
+                    hash = Utilities.CreateSha1FromStream(streams);
+                return new HashResult(hash, message, null);
+            }
+            catch (Exception ex)
+            {
+                return new HashResult(null, $"Error hashing '{songDirectory}'", ex);
+            }
         }
 
 
