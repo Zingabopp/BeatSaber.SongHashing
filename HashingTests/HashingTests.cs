@@ -56,12 +56,10 @@ namespace HashingTests
             for (int i = 0; i < Hashers.Length; i++)
             {
                 var result = Hashers[i].HashDirectory(dir);
-                if (result.ResultType != HashResultType.Success)
-                {
+                if (result.Message != null)
                     Console.WriteLine(result.Message);
-                }
-                else
-                {
+                if (result.ResultType == HashResultType.Success)
+                { 
                     Assert.AreEqual(HashResultType.Success, result.ResultType, Hashers[i].GetType().Name);
                     Assert.AreEqual(expectedHash, result.Hash, Hashers[i].GetType().Name);
                 }

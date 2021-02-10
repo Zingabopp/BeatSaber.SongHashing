@@ -16,6 +16,8 @@
     <PackageTags>Beat Saber</PackageTags>
     <PackageProjectUrl>https://github.com/Zingabopp/BeatSaber.SongHashing</PackageProjectUrl>
     <Copyright>Copyright © Zingabopp 2021</Copyright>
+    <Deterministic>true</Deterministic>
+    <PathMap>$(SolutionDir)=X:\</PathMap>
   </PropertyGroup>
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
