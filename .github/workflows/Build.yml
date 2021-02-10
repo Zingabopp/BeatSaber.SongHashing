@@ -22,6 +22,7 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: Pack
+      id: Pack
       run: dotnet pack ./BeatSaber.SongHashing/BeatSaber.SongHashing.csproj -c Release -o ./artifacts --no-restore --include-symbols
     - name: VerifyName
       run: echo ${{ steps.Pack.outputs.filename }}
