@@ -11,6 +11,14 @@
     <Company>Zingabopp</Company>
     <Description>A collection of utilities for generating Beat Saber beatmap hashes.</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <RepositoryUrl>https://github.com/Zingabopp/BeatSaber.SongHashing.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Beat Saber</PackageTags>
+    <PackageProjectUrl>https://github.com/Zingabopp/BeatSaber.SongHashing</PackageProjectUrl>
+    <Copyright>Copyright © Zingabopp 2021</Copyright>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net5.0' ">
@@ -32,6 +40,9 @@
   <ItemGroup Condition="$(DefineConstants.Contains(SPAN)) AND '$(TargetFramework)' != 'netcoreapp3.1' AND '$(TargetFramework)' != 'net5.0' ">
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.1" />
   </ItemGroup>
+  <ItemGroup Condition="'$(ContinuousIntegrationBuild)' == 'True'">
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\LICENSE">
@@ -40,4 +51,8 @@
     </None>
   </ItemGroup>
 
+  <Target Name="GithubActionsInfo" AfterTargets="Build">
+    <Message Text="::set-output name=filename::$(AssemblyName)-$(PackageVersion)" Importance="high" />
+    <Message Text="::set-output name=assemblyname::$(AssemblyName)" Importance="high" />
+  </Target>
 </Project>
