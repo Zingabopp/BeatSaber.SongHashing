@@ -1,4 +1,4 @@
-name: .NET
+name: Build
 
 on:
   push:
@@ -23,10 +23,12 @@ jobs:
       run: dotnet build --configuration Release --no-restore
     - name: Pack
       run: dotnet pack ./BeatSaber.SongHashing/BeatSaber.SongHashing.csproj -c Release -o ./artifacts --no-restore --include-symbols
+    - name: VerifyName
+      run: echo ${{ steps.Build.outputs.filename }}
     - name: Upload Artifact
       uses: actions/upload-artifact@v1
       with:
-        name: ${{ steps.Build.outputs.filename }}
+        name: NuGet-${{ steps.Build.outputs.filename }}
         path: ./artifacts
     - name: Test
       run: dotnet test --configuration Release --no-build --verbosity normal --logger GitHubActions
