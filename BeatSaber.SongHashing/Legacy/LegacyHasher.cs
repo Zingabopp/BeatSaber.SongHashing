@@ -70,15 +70,7 @@ namespace BeatSaber.SongHashing.Legacy
             }
         }
 
-
-        /// <summary>
-        /// Generates a quick hash of a directory's contents. Does NOT match SongCore.
-        /// Uses most of Kylemc1413's implementation from SongCore.
-        /// </summary>
-        /// <param name="path"></param>
-        /// <exception cref="ArgumentNullException">Thrown when path is null or empty.</exception>
-        /// <exception cref="DirectoryNotFoundException">Thrown when path's directory doesn't exist.</exception>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public long QuickDirectoryHash(string path)
         {
             if (string.IsNullOrEmpty(path))
@@ -87,12 +79,11 @@ namespace BeatSaber.SongHashing.Legacy
             if (!directoryInfo.Exists)
                 throw new DirectoryNotFoundException($"GenerateDirectoryHash couldn't find {path}");
             long dirHash = 0L;
-            foreach (FileInfo file in directoryInfo.GetFiles("*.dat"))
+            foreach (FileInfo file in directoryInfo.GetFiles())
             {
                 dirHash ^= file.CreationTimeUtc.ToFileTimeUtc();
                 dirHash ^= file.LastWriteTimeUtc.ToFileTimeUtc();
-                //dirHash ^= file.Name.GetHashCode();
-                dirHash ^= Utilities.SumCharacters(file.Name);
+                dirHash ^= Utilities.GetStringHash(file.Name);
                 dirHash ^= file.Length;
             }
             return dirHash;

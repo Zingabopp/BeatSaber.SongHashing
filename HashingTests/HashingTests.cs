@@ -59,7 +59,7 @@ namespace HashingTests
                 if (result.Message != null)
                     Console.WriteLine(result.Message);
                 if (result.ResultType == HashResultType.Success)
-                { 
+                {
                     Assert.AreEqual(HashResultType.Success, result.ResultType, Hashers[i].GetType().Name);
                     Assert.AreEqual(expectedHash, result.Hash, Hashers[i].GetType().Name);
                 }

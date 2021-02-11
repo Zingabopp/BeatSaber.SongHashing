@@ -13,7 +13,6 @@ namespace BeatSaber.SongHashing
     {
         /// <summary>
         /// Generates a hash for the song and assigns it to the SongHash field. Returns null if info.dat doesn't exist.
-        /// TODO: Handle/document exceptions (such as if the files no longer exist when this is called).
         /// </summary>
         /// <returns>Hash of the song files. Null if the info.dat file doesn't exist</returns>
         /// <exception cref="DirectoryNotFoundException"></exception>
@@ -22,7 +21,7 @@ namespace BeatSaber.SongHashing
         HashResult HashDirectory(string songDirectory);
 
         /// <summary>
-        /// Generates a quick hash to determine if the song directory or it's files has changed.
+        /// Generates a quick hash to determine if the song directory or it's files has changed. Should match SongCore's hash.
         /// Does NOT equate to a Beat Saver hash.
         /// </summary>
         /// <param name="songDirectory"></param>
@@ -36,9 +35,10 @@ namespace BeatSaber.SongHashing
     public struct HashResult
     {
         /// <summary>
-        /// 
+        /// Result of the hash.
         /// </summary>
         public HashResultType ResultType;
+
         /// <summary>
         /// Beatmap hash if the hashing was successful, null otherwise.
         /// </summary>
@@ -48,8 +48,9 @@ namespace BeatSaber.SongHashing
         /// Any <see cref="Exception"/> thrown while hashing will be stored here.
         /// </summary>
         public Exception? Exception;
+
         /// <summary>
-        /// 
+        /// Any warning or error messages.
         /// </summary>
         public string? Message;
 
