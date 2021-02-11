@@ -7,6 +7,7 @@
     <DocumentationFile>BeatSaber.SongHashing.xml</DocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Title>BeatSaber.SongHashing</Title>
     <Authors>Zingabopp</Authors>
     <Company>Zingabopp</Company>
     <Description>A collection of utilities for generating Beat Saber beatmap hashes.</Description>
@@ -19,6 +20,7 @@
     <Deterministic>true</Deterministic>
     <PathMap>$(SolutionDir)=X:\</PathMap>
     <EmbedUntrackedFiles>true</EmbedUntrackedFiles>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
@@ -49,6 +51,10 @@
 
   <ItemGroup>
     <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="icon.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
