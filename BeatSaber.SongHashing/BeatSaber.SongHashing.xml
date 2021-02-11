@@ -56,22 +56,10 @@
             </summary>
         </member>
         <member name="M:BeatSaber.SongHashing.Hasher.HashDirectory(System.String)">
-            <summary>
-            Generates a hash for the song and assigns it to the SongHash field. Hash is null if it can't be generated.
-            </summary>
-            <returns>Hash of the song files. Hash is null if it can't be generated.</returns>
-            <exception cref="T:System.IO.DirectoryNotFoundException"></exception>
-            <exception cref="T:System.ArgumentNullException"></exception>
+            <inheritdoc/>
         </member>
         <member name="M:BeatSaber.SongHashing.Hasher.QuickDirectoryHash(System.String)">
-            <summary>
-            Generates a quick hash of a directory's contents. Does NOT match SongCore.
-            Uses most of Kylemc1413's implementation from SongCore.
-            </summary>
-            <param name="path"></param>
-            <exception cref="T:System.ArgumentNullException">Thrown when path is null or empty.</exception>
-            <exception cref="T:System.IO.DirectoryNotFoundException">Thrown when path's directory doesn't exist.</exception>
-            <returns></returns>
+            <inheritdoc/>
         </member>
         <member name="T:BeatSaber.SongHashing.IBeatmapHasher">
             <summary>
@@ -81,7 +69,6 @@
         <member name="M:BeatSaber.SongHashing.IBeatmapHasher.HashDirectory(System.String)">
             <summary>
             Generates a hash for the song and assigns it to the SongHash field. Returns null if info.dat doesn't exist.
-            TODO: Handle/document exceptions (such as if the files no longer exist when this is called).
             </summary>
             <returns>Hash of the song files. Null if the info.dat file doesn't exist</returns>
             <exception cref="T:System.IO.DirectoryNotFoundException"></exception>
@@ -90,7 +77,7 @@
         </member>
         <member name="M:BeatSaber.SongHashing.IBeatmapHasher.QuickDirectoryHash(System.String)">
             <summary>
-            Generates a quick hash to determine if the song directory or it's files has changed.
+            Generates a quick hash to determine if the song directory or it's files has changed. Should match SongCore's hash.
             Does NOT equate to a Beat Saver hash.
             </summary>
             <param name="songDirectory"></param>
@@ -103,7 +90,7 @@
         </member>
         <member name="F:BeatSaber.SongHashing.HashResult.ResultType">
             <summary>
-            
+            Result of the hash.
             </summary>
         </member>
         <member name="F:BeatSaber.SongHashing.HashResult.Hash">
@@ -118,7 +105,7 @@
         </member>
         <member name="F:BeatSaber.SongHashing.HashResult.Message">
             <summary>
-            
+            Any warning or error messages.
             </summary>
         </member>
         <member name="M:BeatSaber.SongHashing.HashResult.#ctor(System.String)">
@@ -169,14 +156,7 @@
             <inheritdoc/>
         </member>
         <member name="M:BeatSaber.SongHashing.Legacy.LegacyHasher.QuickDirectoryHash(System.String)">
-            <summary>
-            Generates a quick hash of a directory's contents. Does NOT match SongCore.
-            Uses most of Kylemc1413's implementation from SongCore.
-            </summary>
-            <param name="path"></param>
-            <exception cref="T:System.ArgumentNullException">Thrown when path is null or empty.</exception>
-            <exception cref="T:System.IO.DirectoryNotFoundException">Thrown when path's directory doesn't exist.</exception>
-            <returns></returns>
+            <inheritdoc/>
         </member>
         <member name="T:BeatSaber.SongHashing.Utilities">
             <summary>
@@ -207,6 +187,13 @@
         <member name="M:BeatSaber.SongHashing.Utilities.SumCharacters(System.String)">
             <summary>
             Sums the char value of each character in the given string (unchecked).
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BeatSaber.SongHashing.Utilities.GetStringHash(System.String)">
+            <summary>
+            Duplicates the old .Net Framework string.GetHashCode() result.
             </summary>
             <param name="str"></param>
             <returns></returns>

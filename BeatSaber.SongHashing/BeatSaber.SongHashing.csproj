@@ -21,6 +21,8 @@
     <PathMap>$(SolutionDir)=X:\</PathMap>
     <EmbedUntrackedFiles>true</EmbedUntrackedFiles>
     <PackageIcon>icon.png</PackageIcon>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
