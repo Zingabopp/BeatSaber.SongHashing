@@ -18,6 +18,7 @@
     <Copyright>Copyright © Zingabopp 2021</Copyright>
     <Deterministic>true</Deterministic>
     <PathMap>$(SolutionDir)=X:\</PathMap>
+    <EmbedUntrackedFiles>true</EmbedUntrackedFiles>
   </PropertyGroup>
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
