@@ -70,7 +70,7 @@ namespace HashingTests
         public void MissingDifficulty()
         {
             string dir = Path.Combine(DataFolder, "Missing-Expected-Diff");
-            string expectedHash = "FF9FC9A9A11A575B7EFE7707F2F66AD9A92FE447".ToUpper();
+            string expectedHash = "EF1A4AC10D2E271D6B95D7FEB773D1F387F28525".ToUpper();
             Assert.IsTrue(Directory.Exists(dir), $"Could not find '{dir}'");
             for (int i = 0; i < Hashers.Length; i++)
             {
