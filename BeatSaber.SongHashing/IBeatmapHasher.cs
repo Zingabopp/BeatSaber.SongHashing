@@ -16,18 +16,14 @@ namespace BeatSaber.SongHashing
         /// Generates a hash for the beatmap and assigns it to the SongHash field. Returns null if info.dat doesn't exist.
         /// </summary>
         /// <returns>Hash of the song files. Null if the info.dat file doesn't exist</returns>
-        /// <exception cref="DirectoryNotFoundException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="JsonException"></exception>
         HashResult HashDirectory(string songDirectory, CancellationToken cancellationToken);
 
         /// <summary>
         /// Generates a hash for the zipped beatmap and assigns it to the SongHash field. Returns null if info.dat doesn't exist.
         /// </summary>
         /// <returns>Hash of the beatmap files. Null if the info.dat file doesn't exist</returns>
-        /// <exception cref="DirectoryNotFoundException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="JsonException"></exception>
         HashResult HashZippedBeatmap(string zipPath, CancellationToken cancellationToken);
 
         /// <summary>
@@ -36,6 +32,8 @@ namespace BeatSaber.SongHashing
         /// </summary>
         /// <param name="songDirectory"></param>
         /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="DirectoryNotFoundException"></exception>
         long QuickDirectoryHash(string songDirectory);
     }
 
