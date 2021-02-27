@@ -2,6 +2,7 @@ using BeatSaber.SongHashing;
 using BeatSaber.SongHashing.Legacy;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 
@@ -44,6 +45,33 @@ namespace HashingTests
                 var result = Hashers[i].HashZippedBeatmap(zip, CancellationToken.None);
                 Assert.AreEqual(HashResultType.Success, result.ResultType, Hashers[i].GetType().Name);
                 Assert.AreEqual(expectedHash, result.Hash, Hashers[i].GetType().Name);
+            }
+        }
+
+
+        [TestMethod]
+        public void MultipleValidBeatmaps()
+        {
+            Dictionary<string, string> zipHashes = new Dictionary<string, string>()
+            {
+                { "2cd.zip", "EA2D289FB640CE8A0D7302AE36BFA3A5710D9EE8" },
+                {"5d02.zip", "D6F3F15484FE169F4593718F50EF6D049FCAA72E" },
+                {"5d8d.zip", "310694F2FF8D129D4E64192251653CAFFDC65B62" }, // *B62
+                {"5dbf.zip", "05FF1B7ECDD5089E5EAFC1D8474680E448A017DD" }, // *7dd
+                {"29.zip", "C1C8E2B9394050AFAD435608137941DA0B64B8F3" },
+                {"29-2.zip", "5444F9070133CB10EDED3C676FDEFA9428655115" }
+            };
+            foreach (var pair in zipHashes)
+            {
+                string zip = Path.Combine(DataFolder, pair.Key);
+                string expectedHash = pair.Value?.ToUpper() ?? string.Empty;
+                Assert.IsTrue(File.Exists(zip), $"Could not find '{zip}'");
+                for (int i = 0; i < Hashers.Length; i++)
+                {
+                    var result = Hashers[i].HashZippedBeatmap(zip, CancellationToken.None);
+                    Assert.AreEqual(HashResultType.Success, result.ResultType, $"{Hashers[i].GetType().Name}: {result.Exception}");
+                    Assert.AreEqual(expectedHash, result.Hash, Hashers[i].GetType().Name);
+                }
             }
         }
 
