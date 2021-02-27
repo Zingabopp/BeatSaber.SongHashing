@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 namespace BeatSaber.SongHashing
 {
@@ -18,7 +19,7 @@ namespace BeatSaber.SongHashing
         /// <exception cref="DirectoryNotFoundException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="JsonException"></exception>
-        HashResult HashDirectory(string songDirectory);
+        HashResult HashDirectory(string songDirectory, CancellationToken cancellationToken);
 
         /// <summary>
         /// Generates a quick hash to determine if the song directory or it's files has changed. Should match SongCore's hash.
@@ -34,6 +35,10 @@ namespace BeatSaber.SongHashing
     /// </summary>
     public struct HashResult
     {
+        /// <summary>
+        /// Returns the <see cref="HashResult"/> for a canceled operation.
+        /// </summary>
+        public static HashResult AsCanceled => new HashResult(null, "The operation was canceled.", null) { ResultType = HashResultType.Canceled };
         /// <summary>
         /// Result of the hash.
         /// </summary>
@@ -107,6 +112,10 @@ namespace BeatSaber.SongHashing
         /// <summary>
         /// Beatmap could not be hashed.
         /// </summary>
-        Error
+        Error,
+        /// <summary>
+        /// Hashing was canceled.
+        /// </summary>
+        Canceled
     }
 }

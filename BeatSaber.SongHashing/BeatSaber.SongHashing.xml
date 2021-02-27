@@ -55,7 +55,10 @@
             A collection of hashing utilities.
             </summary>
         </member>
-        <member name="M:BeatSaber.SongHashing.Hasher.HashDirectory(System.String)">
+        <member name="M:BeatSaber.SongHashing.Hasher.HashDirectory(System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:BeatSaber.SongHashing.Hasher.HashZippedBeatmap(System.String,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:BeatSaber.SongHashing.Hasher.QuickDirectoryHash(System.String)">
@@ -66,7 +69,7 @@
             Interface for a beatmap hasher.
             </summary>
         </member>
-        <member name="M:BeatSaber.SongHashing.IBeatmapHasher.HashDirectory(System.String)">
+        <member name="M:BeatSaber.SongHashing.IBeatmapHasher.HashDirectory(System.String,System.Threading.CancellationToken)">
             <summary>
             Generates a hash for the song and assigns it to the SongHash field. Returns null if info.dat doesn't exist.
             </summary>
@@ -86,6 +89,11 @@
         <member name="T:BeatSaber.SongHashing.HashResult">
             <summary>
             Stores the result of a beatmap hashing.
+            </summary>
+        </member>
+        <member name="P:BeatSaber.SongHashing.HashResult.AsCanceled">
+            <summary>
+            Returns the <see cref="T:BeatSaber.SongHashing.HashResult"/> for a canceled operation.
             </summary>
         </member>
         <member name="F:BeatSaber.SongHashing.HashResult.ResultType">
@@ -142,6 +150,11 @@
             Beatmap could not be hashed.
             </summary>
         </member>
+        <member name="F:BeatSaber.SongHashing.HashResultType.Canceled">
+            <summary>
+            Hashing was canceled.
+            </summary>
+        </member>
         <member name="T:BeatSaber.SongHashing.Legacy.LegacyHasher">
             <summary>
             A collection of hashing utilities.
@@ -152,7 +165,7 @@
             Default instance of <see cref="T:BeatSaber.SongHashing.Legacy.LegacyHasher"/>.
             </summary>
         </member>
-        <member name="M:BeatSaber.SongHashing.Legacy.LegacyHasher.HashDirectory(System.String)">
+        <member name="M:BeatSaber.SongHashing.Legacy.LegacyHasher.HashDirectory(System.String,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:BeatSaber.SongHashing.Legacy.LegacyHasher.QuickDirectoryHash(System.String)">

@@ -18,5 +18,60 @@
     <ProjectReference Include="..\BeatSaber.SongHashing\BeatSaber.SongHashing.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ReadOnlyData\ZippedBeatmaps\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ReadOnlyData\InvalidInfoJson\Easy.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReadOnlyData\InvalidInfoJson\Expert.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReadOnlyData\InvalidInfoJson\ExpertPlus.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReadOnlyData\InvalidInfoJson\Hard.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReadOnlyData\InvalidInfoJson\info.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReadOnlyData\InvalidInfoJson\Normal.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReadOnlyData\ZippedBeatmaps\29-2.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReadOnlyData\ZippedBeatmaps\29.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReadOnlyData\ZippedBeatmaps\2cd.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReadOnlyData\ZippedBeatmaps\5d02.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReadOnlyData\ZippedBeatmaps\5d8d.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReadOnlyData\ZippedBeatmaps\5dbf.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReadOnlyData\ZippedBeatmaps\MismatchedCase.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReadOnlyData\ZippedBeatmaps\Missing-Expected-Diff.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReadOnlyData\ZippedBeatmaps\Missing-Info.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReadOnlyData\ZippedBeatmaps\MultipleSets.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
  
 </Project>

@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Threading;
 
 namespace BeatSaber.SongHashing.Legacy
 {
@@ -18,10 +19,12 @@ namespace BeatSaber.SongHashing.Legacy
         public static readonly LegacyHasher Default = new LegacyHasher();
 
         /// <inheritdoc/>
-        public HashResult HashDirectory(string songDirectory)
+        public HashResult HashDirectory(string songDirectory, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(songDirectory))
                 throw new ArgumentNullException(nameof(songDirectory));
+            if (cancellationToken.IsCancellationRequested)
+                return HashResult.AsCanceled;
             DirectoryInfo directory = new DirectoryInfo(songDirectory);
             if (!directory.Exists)
                 throw new DirectoryNotFoundException($"Directory doesn't exist: '{songDirectory}'");
@@ -43,9 +46,13 @@ namespace BeatSaber.SongHashing.Legacy
 
                 combinedBytes = combinedBytes.Concat(File.ReadAllBytes(infoFile)).ToArray();
                 JObject? token = JObject.Parse(File.ReadAllText(infoFile));
+                if (cancellationToken.IsCancellationRequested)
+                    return HashResult.AsCanceled;
                 string[] beatmapFiles = Utilities.GetDifficultyFileNames(token).ToArray();
                 for (int i = 0; i < beatmapFiles.Length; i++)
                 {
+                    if (cancellationToken.IsCancellationRequested)
+                        return HashResult.AsCanceled;
                     string filePath = Path.Combine(songDirectory, beatmapFiles[i]);
                     if (!File.Exists(filePath))
                     {
@@ -61,6 +68,8 @@ namespace BeatSaber.SongHashing.Legacy
                     combinedBytes = combinedBytes.Concat(File.ReadAllBytes(filePath)).ToArray();
                 }
 
+                if (cancellationToken.IsCancellationRequested)
+                    return HashResult.AsCanceled;
                 string hash = Utilities.CreateSha1FromBytes(combinedBytes.ToArray());
                 return new HashResult(hash, message, null);
             }
