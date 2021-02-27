@@ -15,9 +15,10 @@ namespace HashingTests
         internal static readonly string WorkspaceDir = Path.GetFullPath($"..{s}..{s}..{s}..{s}");
         internal static readonly string DataFolder = Path.Combine(WorkspaceDir, "ReadOnlyData", "ZippedBeatmaps");
 
-        Hasher[] Hashers = new Hasher[]
+        IBeatmapHasher[] Hashers = new IBeatmapHasher[]
         {
-            new Hasher()
+            new Hasher(),
+            new LegacyHasher()
         };
 
         [TestMethod]

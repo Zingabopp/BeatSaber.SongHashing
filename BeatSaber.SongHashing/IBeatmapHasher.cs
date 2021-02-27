@@ -13,7 +13,7 @@ namespace BeatSaber.SongHashing
     public interface IBeatmapHasher
     {
         /// <summary>
-        /// Generates a hash for the song and assigns it to the SongHash field. Returns null if info.dat doesn't exist.
+        /// Generates a hash for the beatmap and assigns it to the SongHash field. Returns null if info.dat doesn't exist.
         /// </summary>
         /// <returns>Hash of the song files. Null if the info.dat file doesn't exist</returns>
         /// <exception cref="DirectoryNotFoundException"></exception>
@@ -22,7 +22,16 @@ namespace BeatSaber.SongHashing
         HashResult HashDirectory(string songDirectory, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Generates a quick hash to determine if the song directory or it's files has changed. Should match SongCore's hash.
+        /// Generates a hash for the zipped beatmap and assigns it to the SongHash field. Returns null if info.dat doesn't exist.
+        /// </summary>
+        /// <returns>Hash of the beatmap files. Null if the info.dat file doesn't exist</returns>
+        /// <exception cref="DirectoryNotFoundException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="JsonException"></exception>
+        HashResult HashZippedBeatmap(string zipPath, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Generates a quick hash to determine if the beatmap directory or it's files has changed. Should match SongCore's hash.
         /// Does NOT equate to a Beat Saver hash.
         /// </summary>
         /// <param name="songDirectory"></param>

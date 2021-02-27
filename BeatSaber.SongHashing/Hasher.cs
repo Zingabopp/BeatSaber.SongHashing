@@ -14,7 +14,11 @@ namespace BeatSaber.SongHashing
     /// </summary>
     public class Hasher : IBeatmapHasher
     {
-        protected static JsonSerializer JsonSerializer = new JsonSerializer();
+        /// <summary>
+        /// Shared <see cref="Newtonsoft.Json.JsonSerializer"/>.
+        /// </summary>
+        protected static readonly JsonSerializer JsonSerializer = new JsonSerializer();
+
         /// <inheritdoc/>
         public HashResult HashDirectory(string songDirectory, CancellationToken cancellationToken)
         {
@@ -101,7 +105,7 @@ namespace BeatSaber.SongHashing
                 {
                     return new HashResult(null, $"Unable to hash beatmap zip '{zipPath}': {ex.Message}", ex);
                 }
-                ZipArchiveEntry infoFile = zip.Entries.FirstOrDefault(e => e.FullName.Equals("info.dat", StringComparison.OrdinalIgnoreCase));
+                ZipArchiveEntry? infoFile = zip.Entries.FirstOrDefault(e => e.FullName.Equals("info.dat", StringComparison.OrdinalIgnoreCase));
                 if (infoFile == null)
                 {
                     return new HashResult(null, $"Could not find 'info.dat' file in '{zipPath}'", null);
@@ -125,7 +129,7 @@ namespace BeatSaber.SongHashing
                 {
                     if (cancellationToken.IsCancellationRequested)
                         return HashResult.AsCanceled;
-                    ZipArchiveEntry diff = zip.Entries.FirstOrDefault(e => e.FullName.Equals(beatmapFiles[i], StringComparison.OrdinalIgnoreCase));
+                    ZipArchiveEntry? diff = zip.Entries.FirstOrDefault(e => e.FullName.Equals(beatmapFiles[i], StringComparison.OrdinalIgnoreCase));
                     if (diff == null)
                     {
                         if (missingDiffs == false)
