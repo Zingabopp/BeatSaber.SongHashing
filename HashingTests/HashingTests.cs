@@ -58,8 +58,8 @@ namespace HashingTests
                 {"5d02", "D6F3F15484FE169F4593718F50EF6D049FCAA72E" },
                 {"5d8d", "310694F2FF8D129D4E64192251653CAFFDC65B62" }, // *B62
                 {"5dbf", "05FF1B7ECDD5089E5EAFC1D8474680E448A017DD" }, // *7dd
-                {"29", "C1C8E2B9394050AFAD435608137941DA0B64B8F3" },
-                {"29-2", "5444F9070133CB10EDED3C676FDEFA9428655115" }
+                {"29", "C1C8E2B9394050AFAD435608137941DA0B64B8F3" }
+                //{"29-2", "5444F9070133CB10EDED3C676FDEFA9428655115" }
             };
             foreach (var pair in dirHashes)
             {
