@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Threading;
 using BeatSaber.SongHashing;
 using BeatSaber.SongHashing.Legacy;
 using BenchmarkDotNet.Attributes;
@@ -79,7 +80,8 @@ namespace Benchmarks
         {
             for (int i = 0; i < N; i++)
             {
-                NewHasherResults = songDirectories.AsParallel().Select(d => (d,NewBeatmapHasher.HashDirectory(d))).ToArray();
+                NewHasherResults = songDirectories.AsParallel()
+                    .Select(d => (d,NewBeatmapHasher.HashDirectory(d, CancellationToken.None))).ToArray();
                 //for (int j = 0; j < songDirectories.Length; j++)
                 //    NewHasher.HashDirectory(songDirectories[j]);
             }
@@ -93,7 +95,7 @@ namespace Benchmarks
                 (string, HashResult)[] results = new (string, HashResult)[songDirectories.Length];
                 for(int j = 0; j < results.Length; j++)
                 {
-                    results[j] = (songDirectories[j], NewBeatmapHasher.HashDirectory(songDirectories[j]));
+                    results[j] = (songDirectories[j], NewBeatmapHasher.HashDirectory(songDirectories[j], CancellationToken.None));
                 }
                 //for (int j = 0; j < songDirectories.Length; j++)
                 //    NewHasher.HashDirectory(songDirectories[j]);
@@ -106,7 +108,8 @@ namespace Benchmarks
         {
             for (int i = 0; i < N; i++)
             {
-                OldHasherResults = songDirectories.AsParallel().Select(d => (d, LegacyBeatmapHasher.HashDirectory(d))).ToArray();
+                OldHasherResults = songDirectories.AsParallel()
+                    .Select(d => (d, LegacyBeatmapHasher.HashDirectory(d, CancellationToken.None))).ToArray();
                 //for (int j = 0; j < songDirectories.Length; j++)
                 //    Hasher.HashDirectory(songDirectories[j]);
             }
