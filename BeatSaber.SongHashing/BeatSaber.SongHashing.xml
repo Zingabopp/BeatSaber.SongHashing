@@ -55,6 +55,11 @@
             A collection of hashing utilities.
             </summary>
         </member>
+        <member name="F:BeatSaber.SongHashing.Hasher.JsonSerializer">
+            <summary>
+            Shared <see cref="T:Newtonsoft.Json.JsonSerializer"/>.
+            </summary>
+        </member>
         <member name="M:BeatSaber.SongHashing.Hasher.HashDirectory(System.String,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
@@ -71,16 +76,25 @@
         </member>
         <member name="M:BeatSaber.SongHashing.IBeatmapHasher.HashDirectory(System.String,System.Threading.CancellationToken)">
             <summary>
-            Generates a hash for the song and assigns it to the SongHash field. Returns null if info.dat doesn't exist.
+            Generates a hash for the beatmap and assigns it to the SongHash field. Returns null if info.dat doesn't exist.
             </summary>
             <returns>Hash of the song files. Null if the info.dat file doesn't exist</returns>
             <exception cref="T:System.IO.DirectoryNotFoundException"></exception>
             <exception cref="T:System.ArgumentNullException"></exception>
             <exception cref="T:Newtonsoft.Json.JsonException"></exception>
         </member>
+        <member name="M:BeatSaber.SongHashing.IBeatmapHasher.HashZippedBeatmap(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Generates a hash for the zipped beatmap and assigns it to the SongHash field. Returns null if info.dat doesn't exist.
+            </summary>
+            <returns>Hash of the beatmap files. Null if the info.dat file doesn't exist</returns>
+            <exception cref="T:System.IO.DirectoryNotFoundException"></exception>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:Newtonsoft.Json.JsonException"></exception>
+        </member>
         <member name="M:BeatSaber.SongHashing.IBeatmapHasher.QuickDirectoryHash(System.String)">
             <summary>
-            Generates a quick hash to determine if the song directory or it's files has changed. Should match SongCore's hash.
+            Generates a quick hash to determine if the beatmap directory or it's files has changed. Should match SongCore's hash.
             Does NOT equate to a Beat Saver hash.
             </summary>
             <param name="songDirectory"></param>
@@ -160,12 +174,20 @@
             A collection of hashing utilities.
             </summary>
         </member>
+        <member name="F:BeatSaber.SongHashing.Legacy.LegacyHasher.JsonSerializer">
+            <summary>
+            Shared <see cref="T:Newtonsoft.Json.JsonSerializer"/>.
+            </summary>
+        </member>
         <member name="F:BeatSaber.SongHashing.Legacy.LegacyHasher.Default">
             <summary>
             Default instance of <see cref="T:BeatSaber.SongHashing.Legacy.LegacyHasher"/>.
             </summary>
         </member>
         <member name="M:BeatSaber.SongHashing.Legacy.LegacyHasher.HashDirectory(System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:BeatSaber.SongHashing.Legacy.LegacyHasher.HashZippedBeatmap(System.String,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:BeatSaber.SongHashing.Legacy.LegacyHasher.QuickDirectoryHash(System.String)">
@@ -288,18 +310,29 @@
             <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="offset"/> plus <paramref name="length"/> is greater than the length of <paramref name="inArray"/>.</exception>
             <exception cref="T:System.ArgumentException"><paramref name="options"/> is not a valid <see cref="T:HexMate.HexFormattingOptions"/> value.</exception>
         </member>
-        <member name="M:HexMate.Convert.FromHexString(System.ReadOnlySpan{System.Char})">
+        <member name="T:HexMate.HexFormattingOptions">
             <summary>
-            Converts the span, which encodes binary data as hex characters, to an equivalent 8-bit unsigned integer array.
+            Specifies whether relevant methods produce uppercase or lowercase letters and whether line breaks are inserted in their output.
             </summary>
-            <param name="chars">The span to convert.</param>
-            <returns>An array of 8-bit unsigned integers that is equivalent to <paramref name="chars"/>.</returns>
-            <exception cref="T:System.FormatException">The length of <paramref name="chars"/>, ignoring white-space characters, is not zero or a multiple of 2.</exception>
-            <exception cref="T:System.FormatException">The format of <paramref name="chars"/> is invalid. <paramref name="chars"/> contains a non-hex character.</exception>
         </member>
-        <member name="M:HexMate.Convert.ToHexString(System.ReadOnlySpan{System.Byte},HexMate.HexFormattingOptions)">
+        <member name="F:HexMate.HexFormattingOptions.None">
             <summary>
-            Converts a span of 8-bit unsigned integers to its equivalent string representation that is encoded with hex characters.
+            Produces only uppercase characters and does not insert line breaks after every 72 characters in the string representation.
+            </summary>
+        </member>
+        <member name="F:HexMate.HexFormattingOptions.InsertLineBreaks">
+            <summary>
+            Inserts line breaks after every 72 characters in the string representation.
+            </summary>
+        </member>
+        <member name="F:HexMate.HexFormattingOptions.Lowercase">
+            <summary>
+            Produces only lowercase characters in the string representation.
+            </summary>
+        </member>
+    </members>
+</doc>
+gned integers to its equivalent string representation that is encoded with hex characters.
             A parameter specifies whether to insert line breaks in the return value and whether to insert upper- or lowercase hex characters.
             </summary>
             <param name="bytes">A span of 8-bit unsigned integers.</param>
