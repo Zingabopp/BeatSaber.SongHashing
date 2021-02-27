@@ -32,7 +32,7 @@ namespace BeatSaber.SongHashing
         /// </summary>
         /// <param name="infoFile"></param>
         /// <returns></returns>
-        public static IEnumerable<string> GetDifficultyFileNames(JObject infoFile)
+        internal static IEnumerable<string> GetDifficultyFileNames(JObject infoFile)
         {
             JArray? sets = infoFile[DifficultyBeatmapSetsPropertyName] as JArray
                 ?? throw new JsonException($"info file did not have a '{DifficultyBeatmapSetsPropertyName}' property");
@@ -84,7 +84,7 @@ namespace BeatSaber.SongHashing
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        public static int SumCharacters(string str)
+        internal static int SumCharacters(string str)
         {
             unchecked
             {
