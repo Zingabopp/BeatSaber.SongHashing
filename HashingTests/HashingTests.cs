@@ -25,7 +25,7 @@ namespace HashingTests
         public void SingleDifficulty()
         {
             string dir = Path.Combine(DataFolder, "29");
-            string expectedHash = "5444F9070133CB10EDED3C676FDEFA9428655115".ToUpper();
+            string expectedHash = "c1c8e2b9394050afad435608137941da0b64b8f3".ToUpper();
             Assert.IsTrue(Directory.Exists(dir), $"Could not find '{dir}'");
             for (int i = 0; i < Hashers.Length; i++)
             {
@@ -39,7 +39,7 @@ namespace HashingTests
         public void MultipleDifficulties()
         {
             string dir = Path.Combine(DataFolder, "5d02");
-            string expectedHash = "A955A84C6974761F5E1600998C7EC202DB7810B1".ToUpper();
+            string expectedHash = "d6f3f15484fe169f4593718f50ef6d049fcaa72e".ToUpper();
             Assert.IsTrue(Directory.Exists(dir), $"Could not find '{dir}'");
             for (int i = 0; i < Hashers.Length; i++)
             {
@@ -54,11 +54,11 @@ namespace HashingTests
         {
             Dictionary<string, string> dirHashes = new Dictionary<string, string>()
             {
-                { "2cd", "7012E0B9F32A542B3AA4C271D7A963D974948E85" },
-                {"5d02", "A955A84C6974761F5E1600998C7EC202DB7810B1" },
-                {"5d8d", "0D342446F1E21BD52B9F1F2E94A862CEA03E7BCA" }, // *B62
-                {"5dbf", "3E51494DFC52CE39272A656B0FA99A8E5DDB3FA8" }, // *7dd
-                {"29", "5444F9070133CB10EDED3C676FDEFA9428655115" }
+                { "2cd", "EA2D289FB640CE8A0D7302AE36BFA3A5710D9EE8" },
+                {"5d02", "D6F3F15484FE169F4593718F50EF6D049FCAA72E" },
+                {"5d8d", "310694F2FF8D129D4E64192251653CAFFDC65B62" }, // *B62
+                {"5dbf", "05FF1B7ECDD5089E5EAFC1D8474680E448A017DD" }, // *7dd
+                {"29", "C1C8E2B9394050AFAD435608137941DA0B64B8F3" }
                 //{"29-2", "5444F9070133CB10EDED3C676FDEFA9428655115" }
             };
             foreach (var pair in dirHashes)
@@ -79,7 +79,7 @@ namespace HashingTests
         public void MismatchedDifficultyCase()
         {
             string dir = Path.Combine(DataFolder, "MismatchedCase");
-            string expectedHash = "A955A84C6974761F5E1600998C7EC202DB7810B1".ToUpper();
+            string expectedHash = "d6f3f15484fe169f4593718f50ef6d049fcaa72e".ToUpper();
             Assert.IsTrue(Directory.Exists(dir), $"Could not find '{dir}'");
             for (int i = 0; i < Hashers.Length; i++)
             {
@@ -98,7 +98,7 @@ namespace HashingTests
         public void MissingDifficulty()
         {
             string dir = Path.Combine(DataFolder, "Missing-Expected-Diff");
-            string expectedHash = "FF9FC9A9A11A575B7EFE7707F2F66AD9A92FE447".ToUpper();
+            string expectedHash = "EF1A4AC10D2E271D6B95D7FEB773D1F387F28525".ToUpper();
             Assert.IsTrue(Directory.Exists(dir), $"Could not find '{dir}'");
             for (int i = 0; i < Hashers.Length; i++)
             {
