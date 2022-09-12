@@ -396,6 +396,129 @@
             <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="offset"/> plus <paramref name="length"/> is greater than the length of <paramref name="inArray"/>.</exception>
             <exception cref="T:System.ArgumentException"><paramref name="options"/> is not a valid <see cref="T:HexMate.HexFormattingOptions"/> value.</exception>
         </member>
+        <member name="M:HexMate.Convert.FromHexString(System.ReadOnlySpan{System.Char})">
+            <summary>
+            Converts the span, which encodes binary data as hex characters, to an equivalent 8-bit unsigned integer array.
+            </summary>
+            <param name="chars">The span to convert.</param>
+            <returns>An array of 8-bit unsigned integers that is equivalent to <paramref name="chars"/>.</returns>
+            <exception cref="T:System.FormatException">The length of <paramref name="chars"/>, ignoring white-space characters, is not zero or a multiple of 2.</exception>
+            <exception cref="T:System.FormatException">The format of <paramref name="chars"/> is invalid. <paramref name="chars"/> contains a non-hex character.</exception>
+        </member>
+        <member name="M:HexMate.Convert.ToHexString(System.ReadOnlySpan{System.Byte},HexMate.HexFormattingOptions)">
+            <summary>
+            Converts a span of 8-bit unsigned integers to its equivalent string representation that is encoded with hex characters.
+            A parameter specifies whether to insert line breaks in the return value and whether to insert upper- or lowercase hex characters.
+            </summary>
+            <param name="bytes">A span of 8-bit unsigned integers.</param>
+            <param name="options"><see cref="F:HexMate.HexFormattingOptions.Lowercase"/> to produce lowercase output. <see cref="F:HexMate.HexFormattingOptions.InsertLineBreaks"/> to insert a line break every 72 characters. <see cref="F:HexMate.HexFormattingOptions.None"/> to do neither.</param>
+            <returns>The string representation in hex of the elements in <paramref name="bytes"/>.</returns>
+            <exception cref="T:System.ArgumentException"><paramref name="options"/> is not a valid <see cref="T:HexMate.HexFormattingOptions"/> value.</exception>
+        </member>
+        <member name="M:HexMate.Convert.TryFromHexChars(System.ReadOnlySpan{System.Char},System.Span{System.Byte},System.Int32@)">
+            <summary>
+            Converts the span, which encodes binary data as hex characters, into a span of equivalent 8-bit unsigned integers.
+            </summary>
+            <param name="chars">The span to convert.</param>
+            <param name="bytes">The output span.</param>
+            <param name="bytesWritten">The number of bytes written into <paramref name="bytes"/>.</param>
+            <returns>Whether the conversion operation completed successfully.</returns>
+        </member>
+        <member name="M:HexMate.Convert.TryFromHexString(System.String,System.Span{System.Byte},System.Int32@)">
+            <summary>
+            Converts the specified string, which encodes binary data as hex characters, into a span of equivalent 8-bit unsigned integers.
+            </summary>
+            <param name="s">The string to convert.</param>
+            <param name="bytes">The output span.</param>
+            <param name="bytesWritten">The number of bytes written into <paramref name="bytes"/>.</param>
+            <returns>Whether the conversion operation completed successfully.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="s"/> is <code>null</code>.</exception>
+        </member>
+        <member name="M:HexMate.Convert.TryToHexChars(System.ReadOnlySpan{System.Byte},System.Span{System.Char},System.Int32@,HexMate.HexFormattingOptions)">
+            <summary>
+            Converts a span of 8-bit unsigned integers to an equivalent span of a Unicode characters encoded with hex characters.
+            A parameter specifies whether to insert line breaks in the return value and whether to insert upper- or lowercase hex characters.
+            </summary>
+            <param name="bytes">The input span.</param>
+            <param name="chars">The output span</param>
+            <param name="charsWritten">The number of bytes written into <paramref name="chars"/>.</param>
+            <param name="options"><see cref="F:HexMate.HexFormattingOptions.Lowercase"/> to produce lowercase output. <see cref="F:HexMate.HexFormattingOptions.InsertLineBreaks"/> to insert a line break every 72 characters. <see cref="F:HexMate.HexFormattingOptions.None"/> to do neither.</param>
+            <returns>Whether the conversion operation completed successfully.</returns>
+            <exception cref="T:System.ArgumentException"><paramref name="options"/> is not a valid <see cref="T:HexMate.HexFormattingOptions"/> value.</exception>
+        </member>
+        <member name="T:HexMate.Hex">
+            <summary>
+            A collection of functions for converting data.
+            </summary>
+        </member>
+        <member name="M:HexMate.Hex.DecodeFromUtf8(System.ReadOnlySpan{System.Byte},System.Span{System.Byte},System.Int32@,System.Int32@,System.Boolean)">
+            <summary>
+            Decode the span of UTF-8 encoded text represented as hexadecimal characters into binary data.
+            If the input is not a multiple of 2, it will decode as much as it can, to the closest multiple of 2.
+            </summary>
+            <param name="utf8">The input span which contains UTF-8 encoded text that needs to be decoded.</param>
+            <param name="bytes">The output span which contains the result of the operation, i.e. the decoded binary data.</param>
+            <param name="bytesConsumed">The number of input bytes consumed during the operation. This can be used to slice the input for subsequent calls, if necessary.</param>
+            <param name="bytesWritten">The number of bytes written into the output span. This can be used to slice the output for subsequent calls, if necessary.</param>
+            <param name="isFinalBlock">True (default) when the input span contains the entire data to decode.
+            Set to false only if it is known that the input span contains partial data with more data to follow.</param>
+            <returns>It returns the OperationStatus enum values:
+            - Done - on successful processing of the entire input span
+            - DestinationTooSmall - if there is not enough space in the output span to fit the decoded input
+            - NeedMoreData - only if isFinalBlock is false and the input is not a multiple of 2, otherwise the partial input would be considered as InvalidData
+            - InvalidData - if the input contains bytes outside of the expected range, or if the input is incomplete (i.e. not a multiple of 2) and isFinalBlock is true.
+            </returns>
+        </member>
+        <member name="M:HexMate.Hex.DecodeFromUtf8InPlace(System.Span{System.Byte},System.Int32@)">
+            <summary>
+            Decode the span of UTF-8 encoded text represented as hexadecimal characters into binary data.
+            The decoded binary output is smaller than the text data contained in the input (the operation deflates the data).
+            If the input is not a multiple of 2, it will not decode any.
+            </summary>
+            <param name="buffer">The input span which contains UTF-8 encoded text that needs to be decoded.</param>
+            <param name="bytesWritten">The number of bytes written into the buffer.</param>
+            <returns>It returns the OperationStatus enum values:
+            - Done - on successful processing of the entire input span
+            - InvalidData - if the input contains bytes outside of the expected range, or if the input is incomplete (i.e. not a multiple of 2).
+            It does not return DestinationTooSmall since that is not possible for hex decoding.
+            It does not return NeedMoreData since this method tramples the data in the buffer and
+            hence can only be called once with all the data in the buffer.
+            </returns>
+        </member>
+        <member name="M:HexMate.Hex.EncodeToUtf8(System.ReadOnlySpan{System.Byte},System.Span{System.Byte},System.Int32@,System.Int32@,System.Boolean)">
+            <summary>
+            Encode the span of binary data into UTF-8 encoded text represented as hexadecimal characters.
+            </summary>
+            <param name="bytes">The input span which contains binary data that needs to be encoded.</param>
+            <param name="utf8">The output span which contains the result of the operation, i.e. the UTF-8 encoded as hexadecimal characters.</param>
+            <param name="bytesConsumed">The number of input bytes consumed during the operation. This can be used to slice the input for subsequent calls, if necessary.</param>
+            <param name="bytesWritten">The number of bytes written into the output span. This can be used to slice the output for subsequent calls, if necessary.</param>
+            <param name="isFinalBlock">True (default) when the input span contains the entire data to encode.
+            Set to false only if it is known that the input span contains partial data with more data to follow.</param>
+            <returns>It returns the OperationStatus enum values:
+            - Done - on successful processing of the entire input span
+            - DestinationTooSmall - if there is not enough space in the output span to fit the encoded input
+            - NeedMoreData - only if isFinalBlock is false
+            It does not return InvalidData since that is not possible for hex encoding.
+            </returns>
+        </member>
+        <member name="M:HexMate.Hex.EncodeToUtf8InPlace(System.Span{System.Byte},System.Int32,System.Int32@)">
+            <summary>
+            Encode the span of binary data (in-place) into UTF-8 encoded text represented as hexadecimal characters.
+            The encoded text output is larger than the binary data contained in the input (the operation inflates the data).
+            </summary>
+            <param name="buffer">The input span which contains binary data that needs to be encoded.
+            It needs to be large enough to fit the result of the operation.</param>
+            <param name="dataLength">The amount of binary data contained within the buffer that needs to be encoded
+            (and needs to be smaller than the buffer length).</param>
+            <param name="bytesWritten">The number of bytes written into the buffer.</param>
+            <returns>It returns the OperationStatus enum values:
+            - Done - on successful processing of the entire buffer
+            - DestinationTooSmall - if there is not enough space in the buffer beyond dataLength to fit the result of encoding the input
+            It does not return NeedMoreData since this method tramples the data in the buffer and hence can only be called once with all the data in the buffer.
+            It does not return InvalidData since that is not possible for hex encoding.
+            </returns>
+        </member>
         <member name="T:HexMate.HexFormattingOptions">
             <summary>
             Specifies whether relevant methods produce uppercase or lowercase letters and whether line breaks are inserted in their output.

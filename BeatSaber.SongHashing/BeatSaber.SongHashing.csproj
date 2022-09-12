@@ -1,81 +1,81 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;netcoreapp3.1;net5.0;net6.0;net461</TargetFrameworks>
-    <LangVersion>8</LangVersion>
-    <Nullable>enable</Nullable>
-    <DocumentationFile>BeatSaber.SongHashing.xml</DocumentationFile>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Title>BeatSaber.SongHashing</Title>
-    <Version>1.2.0</Version>
-    <Authors>Zingabopp</Authors>
-    <Company>Zingabopp</Company>
-    <Description>A collection of utilities for generating Beat Saber beatmap hashes.</Description>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <RepositoryUrl>https://github.com/Zingabopp/BeatSaber.SongHashing.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageTags>Beat Saber</PackageTags>
-    <PackageProjectUrl>https://github.com/Zingabopp/BeatSaber.SongHashing</PackageProjectUrl>
-    <Copyright>Copyright © Zingabopp 2021</Copyright>
-    <Deterministic>true</Deterministic>
-    <PathMap>$(SolutionDir)=X:\</PathMap>
-    <EmbedUntrackedFiles>true</EmbedUntrackedFiles>
-    <PackageIcon>icon.png</PackageIcon>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
-    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;netstandard2.1;netcoreapp3.1;net5.0;net6.0;net461</TargetFrameworks>
+		<LangVersion>8</LangVersion>
+		<Nullable>enable</Nullable>
+		<DocumentationFile>BeatSaber.SongHashing.xml</DocumentationFile>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<Title>BeatSaber.SongHashing</Title>
+		<Version>1.2.0</Version>
+		<Authors>Zingabopp</Authors>
+		<Company>Zingabopp</Company>
+		<Description>A collection of utilities for generating Beat Saber beatmap hashes.</Description>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<RepositoryUrl>https://github.com/Zingabopp/BeatSaber.SongHashing.git</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>Beat Saber</PackageTags>
+		<PackageProjectUrl>https://github.com/Zingabopp/BeatSaber.SongHashing</PackageProjectUrl>
+		<Copyright>Copyright © Zingabopp 2021</Copyright>
+		<Deterministic>true</Deterministic>
+		<PathMap>$(SolutionDir)=X:\</PathMap>
+		<EmbedUntrackedFiles>true</EmbedUntrackedFiles>
+		<PackageIcon>icon.png</PackageIcon>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+	</PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net5.0' ">
-    <DefineConstants>GC_ALLOC_UNINIT</DefineConstants>
-  </PropertyGroup>
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net5.0' OR '$(TargetFramework)' == 'net6.0' ">
+		<DefineConstants>$(DefineConstants);GC_ALLOC_UNINIT</DefineConstants>
+	</PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' OR '$(TargetFramework)' == 'net5.0' ">
-    <DefineConstants>INTRINSICS;SPAN</DefineConstants>
-  </PropertyGroup>
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' OR '$(TargetFramework)' == 'net5.0' OR '$(TargetFramework)' == 'net6.0' ">
+		<DefineConstants>$(DefineConstants);INTRINSICS;SPAN</DefineConstants>
+	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0' OR '$(TargetFramework)' == 'net5.0' ">
-		<DefineConstants>ASYNC</DefineConstants>
+		<DefineConstants>$(DefineConstants);ASYNC</DefineConstants>
 	</PropertyGroup>
-	
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.1' OR '$(TargetFramework)' == 'netcoreapp2.1'">
-    <DefineConstants>SPAN</DefineConstants>
-  </PropertyGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
-    <Reference Include="System.IO.Compression" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-  </ItemGroup>
 
-  <ItemGroup Condition="$(DefineConstants.Contains(SPAN)) AND '$(TargetFramework)' != 'netcoreapp3.1' AND '$(TargetFramework)' != 'net5.0' ">
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.1" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(ContinuousIntegrationBuild)' == 'True'">
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-  </ItemGroup>
+	<PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.1' OR '$(TargetFramework)' == 'netcoreapp3.1' OR '$(TargetFramework)' == 'net5.0' OR '$(TargetFramework)' == 'net6.0'">
+		<DefineConstants>$(DefineConstants);SPAN</DefineConstants>
+	</PropertyGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+		<Reference Include="System.IO.Compression" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-    <None Include="icon.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup Condition="$(DefineConstants.Contains(SPAN)) AND '$(TargetFramework)' != 'netcoreapp3.1' AND '$(TargetFramework)' != 'net5.0' ">
+		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.1" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(ContinuousIntegrationBuild)' == 'True'">
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+	</ItemGroup>
 
-  <Target Name="GithubActionsInfo" AfterTargets="Build">
-    <Message Text="::set-output name=filename::$(AssemblyName)-$(PackageVersion)" Importance="high" />
-    <Message Text="::set-output name=assemblyname::$(AssemblyName)" Importance="high" />
-  </Target>
+	<ItemGroup>
+		<None Include="..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+		<None Include="icon.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
 
-  <Target Name="GithubActionsInfo" AfterTargets="Pack">
-    <Message Text="::set-output name=filename::$(AssemblyName)-$(PackageVersion)" Importance="high" />
-    <Message Text="::set-output name=assemblyname::$(AssemblyName)" Importance="high" />
-  </Target>
+	<Target Name="GithubActionsInfo" AfterTargets="Build">
+		<Message Text="::set-output name=filename::$(AssemblyName)-$(PackageVersion)" Importance="high" />
+		<Message Text="::set-output name=assemblyname::$(AssemblyName)" Importance="high" />
+	</Target>
+
+	<Target Name="GithubActionsInfo" AfterTargets="Pack">
+		<Message Text="::set-output name=filename::$(AssemblyName)-$(PackageVersion)" Importance="high" />
+		<Message Text="::set-output name=assemblyname::$(AssemblyName)" Importance="high" />
+	</Target>
 </Project>

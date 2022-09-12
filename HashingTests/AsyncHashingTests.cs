@@ -1,3 +1,4 @@
+#if ASYNC
 using BeatSaber.SongHashing;
 using BeatSaber.SongHashing.Legacy;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -147,3 +148,4 @@ namespace HashingTests
         }
     }
 }
+#endif
