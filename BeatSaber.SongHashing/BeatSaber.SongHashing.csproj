@@ -8,7 +8,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Title>BeatSaber.SongHashing</Title>
-    <Version>1.1.1</Version>
+    <Version>1.2.0</Version>
     <Authors>Zingabopp</Authors>
     <Company>Zingabopp</Company>
     <Description>A collection of utilities for generating Beat Saber beatmap hashes.</Description>
