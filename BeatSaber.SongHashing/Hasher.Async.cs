@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿#if ASYNC
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
@@ -6,6 +7,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace BeatSaber.SongHashing
 {
@@ -14,89 +16,8 @@ namespace BeatSaber.SongHashing
     /// </summary>
     public partial class Hasher : IBeatmapHasher
     {
-        /// <summary>
-        /// The result of <see cref="PrepareStream(string, CancellationToken)"/>
-        /// </summary>
-        protected struct PrepResult
-        {
-            /// <summary>
-            /// Creates a new <see cref="PrepResult"/>
-            /// </summary>
-            /// <param name="streams"></param>
-            /// <param name="warning"></param>
-            public PrepResult(ConcatenatedStream streams, string? warning)
-            {
-                Streams = streams;
-                Warning = warning;
-            }
-            /// <summary>
-            /// <see cref="ConcatenatedStream"/> with all difficulty files
-            /// </summary>
-            public readonly ConcatenatedStream Streams;
-            /// <summary>
-            /// Warning message generated, if any
-            /// </summary>
-            public readonly string? Warning;
-        }
-        /// <summary>
-        /// Shared <see cref="Newtonsoft.Json.JsonSerializer"/>.
-        /// </summary>
-        protected static readonly JsonSerializer JsonSerializer = new JsonSerializer();
-        /// <summary>
-        /// Prepares the stream to be hashed
-        /// </summary>
-        /// <param name="songDirectory"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        protected PrepResult PrepareStream(string songDirectory, CancellationToken cancellationToken)
-        {
-            DirectoryInfo directory = new DirectoryInfo(songDirectory);
-            if (!directory.Exists)
-                throw new DirectoryNotFoundException($"Directory doesn't exist: '{songDirectory}'");
-
-            //FileInfo[] files = directory.GetFiles();
-            // TODO: Could theoretically get the wrong hash if there are multiple 'info.dat' files with different cases on linux.
-            string? infoFileName = directory.EnumerateFiles().FirstOrDefault(f => f.Name.Equals("info.dat", StringComparison.OrdinalIgnoreCase))?.FullName;
-
-            if (infoFileName == null)
-            {
-                throw new InvalidOperationException($"Could not find 'info.dat' file in '{songDirectory}'");
-            }
-            string infoFile = Path.Combine(songDirectory, infoFileName);
-            if (!File.Exists(infoFile))
-                throw new InvalidOperationException($"Could not find 'info.dat' file in '{songDirectory}'");
-
-            JObject token = JObject.Parse(File.ReadAllText(infoFile));
-
-            cancellationToken.ThrowIfCancellationRequested();
-            string[] beatmapFiles = Utilities.GetDifficultyFileNames(token).ToArray();
-            ConcatenatedStream streams = new ConcatenatedStream(beatmapFiles.Length + 1);
-            streams.Append(File.OpenRead(infoFile));
-
-            bool missingDiffs = false;
-            string? message = null;
-            for (int i = 0; i < beatmapFiles.Length; i++)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                string filePath = Path.Combine(songDirectory, beatmapFiles[i]);
-                if (!File.Exists(filePath))
-                {
-                    if (missingDiffs == false)
-                    {
-                        message = $"Could not find difficulty file '{filePath}'";
-                    }
-                    else
-                        message = $"Missing multiple difficulty files in '{songDirectory}'";
-                    missingDiffs = true;
-                    continue;
-                }
-                streams.Append(File.OpenRead(filePath));
-            }
-            return new PrepResult(streams, message);
-        }
-
         /// <inheritdoc/>
-        public HashResult HashDirectory(string songDirectory, CancellationToken cancellationToken)
+        public async Task<HashResult> HashDirectoryAsync(string songDirectory, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(songDirectory))
                 throw new ArgumentNullException(nameof(songDirectory));
@@ -112,7 +33,7 @@ namespace BeatSaber.SongHashing
                     return HashResult.AsCanceled;
                 string? hash = null;
                 if (streams.StreamCount > 0)
-                    hash = Utilities.CreateSha1FromStream(streams);
+                    hash = await Utilities.CreateSha1FromStreamAsync(streams, cancellationToken).ConfigureAwait(false);
                 return new HashResult(hash, message, null);
             }
             catch (OperationCanceledException)
@@ -126,7 +47,7 @@ namespace BeatSaber.SongHashing
         }
 
         /// <inheritdoc/>
-        public HashResult HashZippedBeatmap(string zipPath, CancellationToken cancellationToken)
+        public async Task<HashResult> HashZippedBeatmapAsync(string zipPath, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(zipPath))
                 throw new ArgumentNullException(nameof(zipPath));
@@ -190,8 +111,12 @@ namespace BeatSaber.SongHashing
                     return HashResult.AsCanceled;
                 string? hash = null;
                 if (streams.StreamCount > 0)
-                    hash = Utilities.CreateSha1FromStream(streams);
+                    hash = await Utilities.CreateSha1FromStreamAsync(streams, cancellationToken).ConfigureAwait(false);
                 return new HashResult(hash, message, null);
+            }
+            catch(OperationCanceledException)
+            {
+                return HashResult.AsCanceled;
             }
             catch (Exception ex)
             {
@@ -202,24 +127,6 @@ namespace BeatSaber.SongHashing
                 zip?.Dispose();
             }
         }
-
-        /// <inheritdoc/>
-        public long QuickDirectoryHash(string path)
-        {
-            if (string.IsNullOrEmpty(path))
-                throw new ArgumentNullException(nameof(path), "Path cannot be null or empty for GenerateDirectoryHash");
-            DirectoryInfo directoryInfo = new DirectoryInfo(path);
-            if (!directoryInfo.Exists)
-                throw new DirectoryNotFoundException($"GenerateDirectoryHash couldn't find {path}");
-            long dirHash = 0L;
-            foreach (FileInfo file in directoryInfo.GetFiles())
-            {
-                dirHash ^= file.CreationTimeUtc.ToFileTimeUtc();
-                dirHash ^= file.LastWriteTimeUtc.ToFileTimeUtc();
-                dirHash ^= Utilities.GetStringHash(file.Name);
-                dirHash ^= file.Length;
-            }
-            return dirHash;
-        }
     }
 }
+#endif

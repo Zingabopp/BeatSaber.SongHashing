@@ -1,9 +1,7 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace BeatSaber.SongHashing
 {
@@ -12,6 +10,23 @@ namespace BeatSaber.SongHashing
     /// </summary>
     public interface IBeatmapHasher
     {
+#if ASYNC
+        /// <summary>
+        /// Generates a hash for the beatmap and assigns it to the SongHash field. Returns null if info.dat doesn't exist.
+        /// </summary>
+        /// <returns>Hash of the song files. Null if the info.dat file doesn't exist</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        Task<HashResult> HashDirectoryAsync(string songDirectory, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Generates a hash for the zipped beatmap and assigns it to the SongHash field. Returns null if info.dat doesn't exist.
+        /// </summary>
+        /// <returns>Hash of the beatmap files. Null if the info.dat file doesn't exist</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        Task<HashResult> HashZippedBeatmapAsync(string zipPath, CancellationToken cancellationToken);
+
+#endif
+
         /// <summary>
         /// Generates a hash for the beatmap and assigns it to the SongHash field. Returns null if info.dat doesn't exist.
         /// </summary>
@@ -72,7 +87,7 @@ namespace BeatSaber.SongHashing
         /// <param name="hash"></param>
         public HashResult(string hash)
         {
-            if(string.IsNullOrEmpty(hash))
+            if (string.IsNullOrEmpty(hash))
                 throw new ArgumentNullException(nameof(hash), "This constructor should only be used with a successful hash.");
             Hash = hash;
             ResultType = HashResultType.Success;

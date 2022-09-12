@@ -14,11 +14,23 @@
             Creates an empty <see cref="T:BeatSaber.SongHashing.ConcatenatedStream"/>.
             </summary>
         </member>
+        <member name="P:BeatSaber.SongHashing.ConcatenatedStream.StreamCount">
+            <summary>
+            Number of streams
+            </summary>
+        </member>
         <member name="M:BeatSaber.SongHashing.ConcatenatedStream.#ctor(System.Int32)">
             <summary>
             Creates a new <see cref="T:BeatSaber.SongHashing.ConcatenatedStream"/> from a collection of Streams.
             </summary>
             <param name="initialSize"></param>
+        </member>
+        <member name="M:BeatSaber.SongHashing.ConcatenatedStream.Append(System.IO.Stream)">
+            <summary>
+            Appends a stream
+            </summary>
+            <param name="stream"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
         </member>
         <member name="P:BeatSaber.SongHashing.ConcatenatedStream.CanRead">
             <inheritdoc/>
@@ -50,15 +62,60 @@
         <member name="M:BeatSaber.SongHashing.ConcatenatedStream.Write(System.Byte[],System.Int32,System.Int32)">
             <inheritdoc/>
         </member>
+        <member name="M:BeatSaber.SongHashing.ConcatenatedStream.Dispose(System.Boolean)">
+            <summary>
+            Disposes of all encapsulated streams
+            </summary>
+            <param name="disposing"></param>
+        </member>
         <member name="T:BeatSaber.SongHashing.Hasher">
             <summary>
             A collection of hashing utilities.
+            </summary>
+            <summary>
+            A collection of hashing utilities.
+            </summary>
+        </member>
+        <member name="M:BeatSaber.SongHashing.Hasher.HashDirectoryAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:BeatSaber.SongHashing.Hasher.HashZippedBeatmapAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:BeatSaber.SongHashing.Hasher.PrepResult">
+            <summary>
+            The result of <see cref="M:BeatSaber.SongHashing.Hasher.PrepareStream(System.String,System.Threading.CancellationToken)"/>
+            </summary>
+        </member>
+        <member name="M:BeatSaber.SongHashing.Hasher.PrepResult.#ctor(BeatSaber.SongHashing.ConcatenatedStream,System.String)">
+            <summary>
+            Creates a new <see cref="T:BeatSaber.SongHashing.Hasher.PrepResult"/>
+            </summary>
+            <param name="streams"></param>
+            <param name="warning"></param>
+        </member>
+        <member name="F:BeatSaber.SongHashing.Hasher.PrepResult.Streams">
+            <summary>
+            <see cref="T:BeatSaber.SongHashing.ConcatenatedStream"/> with all difficulty files
+            </summary>
+        </member>
+        <member name="F:BeatSaber.SongHashing.Hasher.PrepResult.Warning">
+            <summary>
+            Warning message generated, if any
             </summary>
         </member>
         <member name="F:BeatSaber.SongHashing.Hasher.JsonSerializer">
             <summary>
             Shared <see cref="T:Newtonsoft.Json.JsonSerializer"/>.
             </summary>
+        </member>
+        <member name="M:BeatSaber.SongHashing.Hasher.PrepareStream(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Prepares the stream to be hashed
+            </summary>
+            <param name="songDirectory"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
         </member>
         <member name="M:BeatSaber.SongHashing.Hasher.HashDirectory(System.String,System.Threading.CancellationToken)">
             <inheritdoc/>
@@ -74,23 +131,33 @@
             Interface for a beatmap hasher.
             </summary>
         </member>
+        <member name="M:BeatSaber.SongHashing.IBeatmapHasher.HashDirectoryAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Generates a hash for the beatmap and assigns it to the SongHash field. Returns null if info.dat doesn't exist.
+            </summary>
+            <returns>Hash of the song files. Null if the info.dat file doesn't exist</returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:BeatSaber.SongHashing.IBeatmapHasher.HashZippedBeatmapAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Generates a hash for the zipped beatmap and assigns it to the SongHash field. Returns null if info.dat doesn't exist.
+            </summary>
+            <returns>Hash of the beatmap files. Null if the info.dat file doesn't exist</returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
         <member name="M:BeatSaber.SongHashing.IBeatmapHasher.HashDirectory(System.String,System.Threading.CancellationToken)">
             <summary>
             Generates a hash for the beatmap and assigns it to the SongHash field. Returns null if info.dat doesn't exist.
             </summary>
             <returns>Hash of the song files. Null if the info.dat file doesn't exist</returns>
-            <exception cref="T:System.IO.DirectoryNotFoundException"></exception>
             <exception cref="T:System.ArgumentNullException"></exception>
-            <exception cref="T:Newtonsoft.Json.JsonException"></exception>
         </member>
         <member name="M:BeatSaber.SongHashing.IBeatmapHasher.HashZippedBeatmap(System.String,System.Threading.CancellationToken)">
             <summary>
             Generates a hash for the zipped beatmap and assigns it to the SongHash field. Returns null if info.dat doesn't exist.
             </summary>
             <returns>Hash of the beatmap files. Null if the info.dat file doesn't exist</returns>
-            <exception cref="T:System.IO.DirectoryNotFoundException"></exception>
             <exception cref="T:System.ArgumentNullException"></exception>
-            <exception cref="T:Newtonsoft.Json.JsonException"></exception>
         </member>
         <member name="M:BeatSaber.SongHashing.IBeatmapHasher.QuickDirectoryHash(System.String)">
             <summary>
@@ -99,6 +166,8 @@
             </summary>
             <param name="songDirectory"></param>
             <returns></returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException"></exception>
         </member>
         <member name="T:BeatSaber.SongHashing.HashResult">
             <summary>
@@ -173,6 +242,15 @@
             <summary>
             A collection of hashing utilities.
             </summary>
+            <summary>
+            A collection of hashing utilities.
+            </summary>
+        </member>
+        <member name="M:BeatSaber.SongHashing.Legacy.LegacyHasher.HashDirectoryAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:BeatSaber.SongHashing.Legacy.LegacyHasher.HashZippedBeatmapAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
         </member>
         <member name="F:BeatSaber.SongHashing.Legacy.LegacyHasher.JsonSerializer">
             <summary>
@@ -197,6 +275,14 @@
             <summary>
             Utilities used for song hashing.
             </summary>
+        </member>
+        <member name="M:BeatSaber.SongHashing.Utilities.CreateSha1FromStreamAsync(System.IO.Stream,System.Threading.CancellationToken)">
+            <summary>
+            Generates a SHA1 hash from a Stream.
+            </summary>
+            <param name="input">Stream to hash.</param>
+            <param name="cancellationToken"></param>
+            <returns>Sha1 hash of the Stream.</returns>
         </member>
         <member name="M:BeatSaber.SongHashing.Utilities.GetDifficultyFileNames(Newtonsoft.Json.Linq.JObject)">
             <summary>
@@ -309,140 +395,6 @@
             <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="offset"/> or <paramref name="length"/> is negative.</exception>
             <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="offset"/> plus <paramref name="length"/> is greater than the length of <paramref name="inArray"/>.</exception>
             <exception cref="T:System.ArgumentException"><paramref name="options"/> is not a valid <see cref="T:HexMate.HexFormattingOptions"/> value.</exception>
-        </member>
-        <member name="T:HexMate.HexFormattingOptions">
-            <summary>
-            Specifies whether relevant methods produce uppercase or lowercase letters and whether line breaks are inserted in their output.
-            </summary>
-        </member>
-        <member name="F:HexMate.HexFormattingOptions.None">
-            <summary>
-            Produces only uppercase characters and does not insert line breaks after every 72 characters in the string representation.
-            </summary>
-        </member>
-        <member name="F:HexMate.HexFormattingOptions.InsertLineBreaks">
-            <summary>
-            Inserts line breaks after every 72 characters in the string representation.
-            </summary>
-        </member>
-        <member name="F:HexMate.HexFormattingOptions.Lowercase">
-            <summary>
-            Produces only lowercase characters in the string representation.
-            </summary>
-        </member>
-    </members>
-</doc>
-gned integers to its equivalent string representation that is encoded with hex characters.
-            A parameter specifies whether to insert line breaks in the return value and whether to insert upper- or lowercase hex characters.
-            </summary>
-            <param name="bytes">A span of 8-bit unsigned integers.</param>
-            <param name="options"><see cref="F:HexMate.HexFormattingOptions.Lowercase"/> to produce lowercase output. <see cref="F:HexMate.HexFormattingOptions.InsertLineBreaks"/> to insert a line break every 72 characters. <see cref="F:HexMate.HexFormattingOptions.None"/> to do neither.</param>
-            <returns>The string representation in hex of the elements in <paramref name="bytes"/>.</returns>
-            <exception cref="T:System.ArgumentException"><paramref name="options"/> is not a valid <see cref="T:HexMate.HexFormattingOptions"/> value.</exception>
-        </member>
-        <member name="M:HexMate.Convert.TryFromHexChars(System.ReadOnlySpan{System.Char},System.Span{System.Byte},System.Int32@)">
-            <summary>
-            Converts the span, which encodes binary data as hex characters, into a span of equivalent 8-bit unsigned integers.
-            </summary>
-            <param name="chars">The span to convert.</param>
-            <param name="bytes">The output span.</param>
-            <param name="bytesWritten">The number of bytes written into <paramref name="bytes"/>.</param>
-            <returns>Whether the conversion operation completed successfully.</returns>
-        </member>
-        <member name="M:HexMate.Convert.TryFromHexString(System.String,System.Span{System.Byte},System.Int32@)">
-            <summary>
-            Converts the specified string, which encodes binary data as hex characters, into a span of equivalent 8-bit unsigned integers.
-            </summary>
-            <param name="s">The string to convert.</param>
-            <param name="bytes">The output span.</param>
-            <param name="bytesWritten">The number of bytes written into <paramref name="bytes"/>.</param>
-            <returns>Whether the conversion operation completed successfully.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="s"/> is <code>null</code>.</exception>
-        </member>
-        <member name="M:HexMate.Convert.TryToHexChars(System.ReadOnlySpan{System.Byte},System.Span{System.Char},System.Int32@,HexMate.HexFormattingOptions)">
-            <summary>
-            Converts a span of 8-bit unsigned integers to an equivalent span of a Unicode characters encoded with hex characters.
-            A parameter specifies whether to insert line breaks in the return value and whether to insert upper- or lowercase hex characters.
-            </summary>
-            <param name="bytes">The input span.</param>
-            <param name="chars">The output span</param>
-            <param name="charsWritten">The number of bytes written into <paramref name="chars"/>.</param>
-            <param name="options"><see cref="F:HexMate.HexFormattingOptions.Lowercase"/> to produce lowercase output. <see cref="F:HexMate.HexFormattingOptions.InsertLineBreaks"/> to insert a line break every 72 characters. <see cref="F:HexMate.HexFormattingOptions.None"/> to do neither.</param>
-            <returns>Whether the conversion operation completed successfully.</returns>
-            <exception cref="T:System.ArgumentException"><paramref name="options"/> is not a valid <see cref="T:HexMate.HexFormattingOptions"/> value.</exception>
-        </member>
-        <member name="T:HexMate.Hex">
-            <summary>
-            A collection of functions for converting data.
-            </summary>
-        </member>
-        <member name="M:HexMate.Hex.DecodeFromUtf8(System.ReadOnlySpan{System.Byte},System.Span{System.Byte},System.Int32@,System.Int32@,System.Boolean)">
-            <summary>
-            Decode the span of UTF-8 encoded text represented as hexadecimal characters into binary data.
-            If the input is not a multiple of 2, it will decode as much as it can, to the closest multiple of 2.
-            </summary>
-            <param name="utf8">The input span which contains UTF-8 encoded text that needs to be decoded.</param>
-            <param name="bytes">The output span which contains the result of the operation, i.e. the decoded binary data.</param>
-            <param name="bytesConsumed">The number of input bytes consumed during the operation. This can be used to slice the input for subsequent calls, if necessary.</param>
-            <param name="bytesWritten">The number of bytes written into the output span. This can be used to slice the output for subsequent calls, if necessary.</param>
-            <param name="isFinalBlock">True (default) when the input span contains the entire data to decode.
-            Set to false only if it is known that the input span contains partial data with more data to follow.</param>
-            <returns>It returns the OperationStatus enum values:
-            - Done - on successful processing of the entire input span
-            - DestinationTooSmall - if there is not enough space in the output span to fit the decoded input
-            - NeedMoreData - only if isFinalBlock is false and the input is not a multiple of 2, otherwise the partial input would be considered as InvalidData
-            - InvalidData - if the input contains bytes outside of the expected range, or if the input is incomplete (i.e. not a multiple of 2) and isFinalBlock is true.
-            </returns>
-        </member>
-        <member name="M:HexMate.Hex.DecodeFromUtf8InPlace(System.Span{System.Byte},System.Int32@)">
-            <summary>
-            Decode the span of UTF-8 encoded text represented as hexadecimal characters into binary data.
-            The decoded binary output is smaller than the text data contained in the input (the operation deflates the data).
-            If the input is not a multiple of 2, it will not decode any.
-            </summary>
-            <param name="buffer">The input span which contains UTF-8 encoded text that needs to be decoded.</param>
-            <param name="bytesWritten">The number of bytes written into the buffer.</param>
-            <returns>It returns the OperationStatus enum values:
-            - Done - on successful processing of the entire input span
-            - InvalidData - if the input contains bytes outside of the expected range, or if the input is incomplete (i.e. not a multiple of 2).
-            It does not return DestinationTooSmall since that is not possible for hex decoding.
-            It does not return NeedMoreData since this method tramples the data in the buffer and
-            hence can only be called once with all the data in the buffer.
-            </returns>
-        </member>
-        <member name="M:HexMate.Hex.EncodeToUtf8(System.ReadOnlySpan{System.Byte},System.Span{System.Byte},System.Int32@,System.Int32@,System.Boolean)">
-            <summary>
-            Encode the span of binary data into UTF-8 encoded text represented as hexadecimal characters.
-            </summary>
-            <param name="bytes">The input span which contains binary data that needs to be encoded.</param>
-            <param name="utf8">The output span which contains the result of the operation, i.e. the UTF-8 encoded as hexadecimal characters.</param>
-            <param name="bytesConsumed">The number of input bytes consumed during the operation. This can be used to slice the input for subsequent calls, if necessary.</param>
-            <param name="bytesWritten">The number of bytes written into the output span. This can be used to slice the output for subsequent calls, if necessary.</param>
-            <param name="isFinalBlock">True (default) when the input span contains the entire data to encode.
-            Set to false only if it is known that the input span contains partial data with more data to follow.</param>
-            <returns>It returns the OperationStatus enum values:
-            - Done - on successful processing of the entire input span
-            - DestinationTooSmall - if there is not enough space in the output span to fit the encoded input
-            - NeedMoreData - only if isFinalBlock is false
-            It does not return InvalidData since that is not possible for hex encoding.
-            </returns>
-        </member>
-        <member name="M:HexMate.Hex.EncodeToUtf8InPlace(System.Span{System.Byte},System.Int32,System.Int32@)">
-            <summary>
-            Encode the span of binary data (in-place) into UTF-8 encoded text represented as hexadecimal characters.
-            The encoded text output is larger than the binary data contained in the input (the operation inflates the data).
-            </summary>
-            <param name="buffer">The input span which contains binary data that needs to be encoded.
-            It needs to be large enough to fit the result of the operation.</param>
-            <param name="dataLength">The amount of binary data contained within the buffer that needs to be encoded
-            (and needs to be smaller than the buffer length).</param>
-            <param name="bytesWritten">The number of bytes written into the buffer.</param>
-            <returns>It returns the OperationStatus enum values:
-            - Done - on successful processing of the entire buffer
-            - DestinationTooSmall - if there is not enough space in the buffer beyond dataLength to fit the result of encoding the input
-            It does not return NeedMoreData since this method tramples the data in the buffer and hence can only be called once with all the data in the buffer.
-            It does not return InvalidData since that is not possible for hex encoding.
-            </returns>
         </member>
         <member name="T:HexMate.HexFormattingOptions">
             <summary>

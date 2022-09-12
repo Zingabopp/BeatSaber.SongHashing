@@ -9,7 +9,7 @@ namespace BeatSaber.SongHashing
     /// <summary>
     /// Utilities used for song hashing.
     /// </summary>
-    public static class Utilities
+    public static partial class Utilities
     {
         private const string DifficultyBeatmapSetsPropertyName = "_difficultyBeatmapSets";
         private const string DifficultyBeatmapsPropertyName = "_difficultyBeatmaps";

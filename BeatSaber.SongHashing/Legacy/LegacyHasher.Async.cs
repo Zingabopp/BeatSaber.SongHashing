@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿#if ASYNC
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
@@ -6,6 +7,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace BeatSaber.SongHashing.Legacy
 {
@@ -14,18 +16,8 @@ namespace BeatSaber.SongHashing.Legacy
     /// </summary>
     public partial class LegacyHasher : IBeatmapHasher
     {
-        /// <summary>
-        /// Shared <see cref="Newtonsoft.Json.JsonSerializer"/>.
-        /// </summary>
-        protected static readonly JsonSerializer JsonSerializer = new JsonSerializer();
-
-        /// <summary>
-        /// Default instance of <see cref="LegacyHasher"/>.
-        /// </summary>
-        public static readonly LegacyHasher Default = new LegacyHasher();
-
         /// <inheritdoc/>
-        public HashResult HashDirectory(string songDirectory, CancellationToken cancellationToken)
+        public async Task<HashResult> HashDirectoryAsync(string songDirectory, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(songDirectory))
                 throw new ArgumentNullException(nameof(songDirectory));
@@ -50,7 +42,7 @@ namespace BeatSaber.SongHashing.Legacy
                 if (!File.Exists(infoFile))
                     return new HashResult(null, $"Could not find 'info.dat' file in '{songDirectory}'", null);
 
-                combinedBytes = combinedBytes.Concat(File.ReadAllBytes(infoFile)).ToArray();
+                combinedBytes = combinedBytes.Concat(await File.ReadAllBytesAsync(infoFile).ConfigureAwait(false)).ToArray();
                 JObject? token = JObject.Parse(File.ReadAllText(infoFile));
                 if (cancellationToken.IsCancellationRequested)
                     return HashResult.AsCanceled;
@@ -71,7 +63,7 @@ namespace BeatSaber.SongHashing.Legacy
                         missingDiffs = true;
                         continue;
                     }
-                    combinedBytes = combinedBytes.Concat(File.ReadAllBytes(filePath)).ToArray();
+                    combinedBytes = combinedBytes.Concat(await File.ReadAllBytesAsync(filePath).ConfigureAwait(false)).ToArray();
                 }
 
                 if (cancellationToken.IsCancellationRequested)
@@ -86,7 +78,7 @@ namespace BeatSaber.SongHashing.Legacy
         }
 
         /// <inheritdoc/>
-        public HashResult HashZippedBeatmap(string zipPath, CancellationToken cancellationToken)
+        public async Task<HashResult> HashZippedBeatmapAsync(string zipPath, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(zipPath))
                 throw new ArgumentNullException(nameof(zipPath));
@@ -150,7 +142,7 @@ namespace BeatSaber.SongHashing.Legacy
                     return HashResult.AsCanceled;
                 string? hash = null;
                 if (streams.StreamCount > 0)
-                    hash = Utilities.CreateSha1FromStream(streams);
+                    hash = await Utilities.CreateSha1FromStreamAsync(streams, cancellationToken).ConfigureAwait(false);
                 return new HashResult(hash, message, null);
             }
             catch (Exception ex)
@@ -162,24 +154,6 @@ namespace BeatSaber.SongHashing.Legacy
                 zip?.Dispose();
             }
         }
-
-        /// <inheritdoc/>
-        public long QuickDirectoryHash(string path)
-        {
-            if (string.IsNullOrEmpty(path))
-                throw new ArgumentNullException(nameof(path), "Path cannot be null or empty for GenerateDirectoryHash");
-            DirectoryInfo directoryInfo = new DirectoryInfo(path);
-            if (!directoryInfo.Exists)
-                throw new DirectoryNotFoundException($"GenerateDirectoryHash couldn't find {path}");
-            long dirHash = 0L;
-            foreach (FileInfo file in directoryInfo.GetFiles())
-            {
-                dirHash ^= file.CreationTimeUtc.ToFileTimeUtc();
-                dirHash ^= file.LastWriteTimeUtc.ToFileTimeUtc();
-                dirHash ^= Utilities.GetStringHash(file.Name);
-                dirHash ^= file.Length;
-            }
-            return dirHash;
-        }
     }
 }
+#endif

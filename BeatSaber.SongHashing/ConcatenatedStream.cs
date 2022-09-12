@@ -11,7 +11,7 @@ namespace BeatSaber.SongHashing
     /// <summary>
     /// A collection of Streams treated as one.
     /// </summary>
-    internal class ConcatenatedStream : Stream
+    public class ConcatenatedStream : Stream
     {
         private readonly Queue<Stream> _streams;
 
@@ -22,7 +22,9 @@ namespace BeatSaber.SongHashing
         {
             _streams = new Queue<Stream>();
         }
-
+        /// <summary>
+        /// Number of streams
+        /// </summary>
         public int StreamCount => _streams.Count;
 
         /// <summary>
@@ -33,7 +35,11 @@ namespace BeatSaber.SongHashing
         {
             _streams = new Queue<Stream>(initialSize);
         }
-
+        /// <summary>
+        /// Appends a stream
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public void Append(Stream stream)
         {
             _streams.Enqueue(stream ?? throw new ArgumentNullException(nameof(stream)));
@@ -109,7 +115,10 @@ namespace BeatSaber.SongHashing
         {
             throw new NotImplementedException();
         }
-
+        /// <summary>
+        /// Disposes of all encapsulated streams
+        /// </summary>
+        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)
